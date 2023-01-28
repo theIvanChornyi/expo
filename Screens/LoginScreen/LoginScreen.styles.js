@@ -3,14 +3,14 @@ import { StyleSheet } from 'react-native';
 export const style = StyleSheet.create({
   background: {
     flex: 1,
-    justifyContent: 'center',
+    resizeMode: 'cover',
+    justifyContent: 'flex-end',
   },
   container: {
     flex: 1,
   },
   authField: {
     flex: 1,
-    marginTop: 323,
     backgroundColor: '#FFFFFF',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
