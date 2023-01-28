@@ -9,6 +9,7 @@ import {
   View,
   Dimensions,
   Image,
+  Text,
 } from 'react-native';
 
 const initialState = {
@@ -39,12 +40,12 @@ export const RegistrationScreen = () => {
                   style={{ ...style.authInput, ...style.passwordInp }}
                   value={authData.password}
                 />
-                <Button style={style.passwordBtn}>Показать</Button>
+                <Button style={style.passwordBtn} title="Показать" />
               </View>
 
-              <Button style={style.submitBtn}>Зарегистрироваться</Button>
+              <Button style={style.submitBtn} title="Зарегистрироваться" />
 
-              <Button style={style.navBtn}>Уже есть аккаунт? Войти</Button>
+              <Button style={style.navBtn} title="Уже есть аккаунт? Войти" />
             </View>
           </View>
         </ImageBackground>

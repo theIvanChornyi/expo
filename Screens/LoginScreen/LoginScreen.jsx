@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import {
-  Button,
   ImageBackground,
   KeyboardAvoidingView,
-  StyleSheet,
   TextInput,
   TouchableWithoutFeedback,
   View,
   Dimensions,
+  Keyboard,
+  Text,
+  TouchableOpacity,
 } from 'react-native';
+
+import { style } from './LoginScreen.styles.js';
 
 const initialState = {
   login: '',
@@ -17,32 +20,56 @@ const initialState = {
 
 export const LoginScreen = () => {
   const [authData, setAuthData] = useState(initialState);
+  const [isHide, setIsHide] = useState(true);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
+        style={{ flex: 1 }}
         behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
       >
-        <ImageBackground source={(require = '../../img/bg/starttBG.jpg')}>
+        <ImageBackground
+          source={require('../../img/bg/starttBG.jpg')}
+          style={style.background}
+          resizeMode="cover"
+        >
           <View style={style.container}>
             <View style={style.authField}>
               <Text style={style.title}>Войти</Text>
-
-              <TextInput style={style.authInput} value={authData.login} />
+              <TextInput
+                style={style.authInput}
+                value={authData.login}
+                keyboardType={'email-address'}
+                placeholder="Адрес электронной почты"
+                placeholderTextColor="#BDBDBD"
+              />
 
               <View style={style.passwordWrapper}>
                 <TextInput
                   style={{ ...style.authInput, ...style.passwordInp }}
                   value={authData.password}
+                  secureTextEntry={isHide}
+                  placeholder="Пароль"
+                  placeholderTextColor="#BDBDBD"
                 />
-                <Button style={style.passwordBtn}>Показать</Button>
+                <TouchableOpacity
+                  style={style.passwordBtn}
+                  activeOpacity={0.4}
+                  onPress={() => setIsHide(p => !p)}
+                >
+                  <Text style={style.passwordBtnText}>Показать</Text>
+                </TouchableOpacity>
               </View>
 
-              <Button style={style.submitBtn}>Войти</Button>
+              <TouchableOpacity style={style.submitBtn}>
+                <Text style={style.submitBtnText}>Войти</Text>
+              </TouchableOpacity>
 
-              <Button style={style.navBtn}>
-                Нет аккаунта? Зарегистрироваться
-              </Button>
+              <TouchableOpacity style={style.navBtn}>
+                <Text style={style.navBtnText}>
+                  Нет аккаунта? Зарегистрироваться
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </ImageBackground>
@@ -50,15 +77,3 @@ export const LoginScreen = () => {
     </TouchableWithoutFeedback>
   );
 };
-
-const style = StyleSheet.create({
-  container: {},
-  authField: {},
-  title: {},
-  authInput: {},
-  passwordWrapper: {},
-  passwordInp: {},
-  passwordBtn: {},
-  submitBtn: {},
-  navBtn: {},
-});
