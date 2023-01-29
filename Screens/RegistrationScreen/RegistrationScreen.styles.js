@@ -50,7 +50,7 @@ export const style = StyleSheet.create({
     backgroundColor: '#F6F6F6',
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: '#E8E8E8',
+    // borderColor: '#E8E8E8',
     borderRadius: 8,
   },
   passwordWrapper: {

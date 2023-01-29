@@ -5,24 +5,33 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   View,
-  Dimensions,
   Keyboard,
   Text,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import { useKeyboardStatus } from '../../Hooks/useKeyboardStatus/useKeyboardStatus.js';
 
 import { style } from './LoginScreen.styles.js';
 
 const initialState = {
-  login: '',
+  email: '',
   password: '',
 };
 
 export const LoginScreen = () => {
   const [authData, setAuthData] = useState(initialState);
   const [isHide, setIsHide] = useState(true);
+  const [activeField, setActiveField] = useState('');
+
   const isShowKeyboard = useKeyboardStatus();
+
+  let width, height;
+
+  useEffect(() => {
+    width = Dimensions.get('window').width;
+    height = Dimensions.get('window').height;
+  }, []);
 
   const hideKeyborard = () => {
     setIsHide(true);
@@ -30,8 +39,10 @@ export const LoginScreen = () => {
   };
 
   const login = () => {
-    hideKeyborard();
     console.log(authData);
+
+    hideKeyborard();
+    setAuthData(initialState);
   };
 
   return (
@@ -42,7 +53,7 @@ export const LoginScreen = () => {
       >
         <ImageBackground
           source={require('../../img/bg/starttBG.jpg')}
-          style={style.background}
+          style={{ ...style.background, width }}
         >
           <View
             style={{
@@ -50,19 +61,32 @@ export const LoginScreen = () => {
               marginTop: isShowKeyboard ? 273 : 323,
             }}
           >
-            <Text style={style.title}>Войти</Text>
+            <Text
+              style={{
+                ...style.title,
+                borderColor: activeField === 'login' ? '#FF6C00' : '#E8E8E8',
+              }}
+            >
+              Войти
+            </Text>
             <TextInput
               style={style.authInput}
               value={authData.login}
               keyboardType={'email-address'}
               placeholder="Адрес электронной почты"
               placeholderTextColor="#BDBDBD"
-              onChangeText={value => setAuthData(p => ({ ...p, login: value }))}
+              onChangeText={value => setAuthData(p => ({ ...p, email: value }))}
+              onFocus={() => setActiveField('email')}
+              onBlur={() => setActiveField('')}
             />
 
             <View style={style.passwordWrapper}>
               <TextInput
-                style={{ ...style.authInput, ...style.passwordInp }}
+                style={{
+                  ...style.authInput,
+                  ...style.passwordInp,
+                  borderColor: activeField === 'login' ? '#FF6C00' : '#E8E8E8',
+                }}
                 value={authData.password}
                 secureTextEntry={isHide}
                 placeholder="Пароль"
@@ -70,7 +94,11 @@ export const LoginScreen = () => {
                 onChangeText={value =>
                   setAuthData(p => ({ ...p, password: value }))
                 }
-                onBlur={() => setIsHide(true)}
+                onFocus={() => setActiveField('password')}
+                onBlur={() => {
+                  setIsHide(true);
+                  setActiveField('');
+                }}
               />
               <TouchableOpacity
                 style={style.passwordBtn}
@@ -81,11 +109,11 @@ export const LoginScreen = () => {
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity style={style.submitBtn} onPress={hideKeyborard}>
+            <TouchableOpacity style={style.submitBtn} onPress={login}>
               <Text style={style.submitBtnText}>Войти</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={style.navBtn} onPress={login}>
+            <TouchableOpacity style={style.navBtn}>
               <Text style={style.navBtnText}>
                 Нет аккаунта? Зарегистрироваться
               </Text>
