@@ -21,25 +21,29 @@ const initialState = {
 
 export const LoginScreen = () => {
   const [authData, setAuthData] = useState(initialState);
-  const [isHide, setIsHide] = useState(initialState);
+  const [isHide, setIsHide] = useState(true);
   const isShowKeyboard = useKeyboardStatus();
 
   const hideKeyborard = () => {
-    console.log('hello');
+    setIsHide(true);
     Keyboard.dismiss();
+  };
+
+  const login = () => {
+    hideKeyborard();
+    console.log(authData);
   };
 
   return (
     <TouchableWithoutFeedback onPress={hideKeyborard}>
-      <ImageBackground
-        source={require('../../img/bg/starttBG.jpg')}
-        style={style.background}
+      <KeyboardAvoidingView
+        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+        style={style.container}
       >
-        {/* <KeyboardAvoidingView
-          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-          style={{ flex: 1 }}
-        > */}
-        <View style={style.container}>
+        <ImageBackground
+          source={require('../../img/bg/starttBG.jpg')}
+          style={style.background}
+        >
           <View
             style={{
               ...style.authField,
@@ -60,13 +64,13 @@ export const LoginScreen = () => {
               <TextInput
                 style={{ ...style.authInput, ...style.passwordInp }}
                 value={authData.password}
-                keyboardType={'default'}
                 secureTextEntry={isHide}
                 placeholder="Пароль"
                 placeholderTextColor="#BDBDBD"
                 onChangeText={value =>
                   setAuthData(p => ({ ...p, password: value }))
                 }
+                onBlur={() => setIsHide(true)}
               />
               <TouchableOpacity
                 style={style.passwordBtn}
@@ -81,15 +85,14 @@ export const LoginScreen = () => {
               <Text style={style.submitBtnText}>Войти</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={style.navBtn}>
+            <TouchableOpacity style={style.navBtn} onPress={login}>
               <Text style={style.navBtnText}>
                 Нет аккаунта? Зарегистрироваться
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
-        {/* </KeyboardAvoidingView> */}
-      </ImageBackground>
+        </ImageBackground>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 };
