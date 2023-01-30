@@ -38,11 +38,6 @@ export const style = StyleSheet.create({
     bottom: 14,
     width: 25,
     height: 25,
-    backgroundColor: '#fff',
-    borderRadius: 50,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: '#FF6C00',
   },
 
   title: {

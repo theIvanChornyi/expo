@@ -18,6 +18,7 @@ import { useKeyboardStatus } from '../../Hooks/useKeyboardStatus/useKeyboardStat
 import { style } from './RegistrationScreen.styles';
 import { Loader } from '../../Components/Loader/Loader.jsx';
 import { useDeviceSize } from '../../Hooks/useDeviceSize/useDeviceSize.js';
+import Plus from '../../img/svg/add.svg';
 
 const initialState = {
   login: '',
@@ -30,6 +31,7 @@ export const RegistrationScreen = () => {
   const [isHide, setIsHide] = useState(true);
   const [activeField, setActiveField] = useState('');
   const [isReady, setIsReady] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
 
   const isShowKeyboard = useKeyboardStatus();
   const { width, height } = useDeviceSize();
@@ -87,8 +89,17 @@ export const RegistrationScreen = () => {
                   style={style.avatar}
                   source={require('../../img/svg/add.svg')}
                 />
-                <TouchableOpacity style={style.addAvatarBtn}>
-                  <Image style={style.addAvatarIco} />
+                <TouchableOpacity
+                  activeOpacity={1}
+                  style={style.addAvatarBtn}
+                  onPress={() => setIsAdded(p => !p)}
+                >
+                  <Plus
+                    stroke={isAdded ? '#BDBDBD' : '#FF6C00'}
+                    style={{
+                      transform: [{ rotate: isAdded ? '45deg' : '0deg' }],
+                    }}
+                  />
                 </TouchableOpacity>
               </View>
               <Text style={style.title}>Регистрация</Text>
