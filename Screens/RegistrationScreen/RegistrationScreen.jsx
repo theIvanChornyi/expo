@@ -9,6 +9,7 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
+  Image,
 } from 'react-native';
 import { useKeyboardStatus } from '../../Hooks/useKeyboardStatus/useKeyboardStatus.js';
 import { style } from './RegistrationScreen.styles';
@@ -60,6 +61,15 @@ export const RegistrationScreen = () => {
               marginTop: isShowKeyboard ? 147 : 263,
             }}
           >
+            <View style={style.avatarContainer}>
+              <Image
+                style={style.avatar}
+                source={require('../../img/svg/add.svg')}
+              />
+              <TouchableOpacity style={style.addAvatarBtn}>
+                <Image style={style.addAvatarIco} />
+              </TouchableOpacity>
+            </View>
             <Text style={style.title}>Регистрация</Text>
 
             <TextInput

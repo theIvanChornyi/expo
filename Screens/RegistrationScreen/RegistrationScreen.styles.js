@@ -14,13 +14,39 @@ export const style = StyleSheet.create({
     flex: 1,
   },
   authField: {
+    position: 'relative',
     backgroundColor: '#FFFFFF',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     marginTop: 323,
   },
+  avatarContainer: {
+    position: 'absolute',
+    backgroundColor: '#F6F6F6',
+    left: '50%',
+    top: -60,
+    width: 120,
+    height: 120,
+
+    borderRadius: 16,
+    transform: [{ translateX: -60 }],
+  },
+
+  addAvatarBtn: {
+    position: 'absolute',
+    right: -25 / 2,
+    bottom: 14,
+    width: 25,
+    height: 25,
+    backgroundColor: '#fff',
+    borderRadius: 50,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: '#FF6C00',
+  },
+
   title: {
-    marginTop: 32,
+    marginTop: 92,
     marginBottom: 16,
     // fontFamily: 'Roboto',
     // fontStyle: 'normal',
