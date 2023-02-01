@@ -9,7 +9,6 @@ import { RegistrationScreen } from './Screens/authScreens/RegistrationScreen/Reg
 import { Home } from './Screens/mainScreens/Home';
 
 const AuthStack = createNativeStackNavigator();
-
 export default function App() {
   const [fontsLoaded] = useFonts({
     'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf'),
