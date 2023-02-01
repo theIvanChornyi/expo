@@ -1,12 +1,18 @@
 import { useState } from 'react';
-import { Image, ImageBackground, Text, View } from 'react-native';
-import { AddPhotoBtn } from '../../../Components/AddPhotoBtn/AddPhotoBtn';
-import { LogOutBtn } from '../../../Components/LogOutBtn/LogOutBtn';
-import { useDeviceSize } from '../../../Hooks/useDeviceSize/useDeviceSize';
+import { Dimensions, FlatList, ImageBackground, View } from 'react-native';
+
 import { style } from './ProfileScreen.styles';
 
+import data from '../../../assets/mockPosts';
+import { PostBody } from '../../../Components/PostBody/PostBody';
+import { PostHeader } from '../../../Components/PostHeader/PostHeader';
+
 export const ProfileScreen = ({ navigation }) => {
-  const { width, height } = useDeviceSize();
+  const height = Dimensions.get('window').height;
+  const width = Dimensions.get('window').width;
+
+  const [posts, setPosts] = useState(data);
+
   const [isAdded, setIsAdded] = useState(false);
 
   const changeAvatar = () => {
@@ -18,20 +24,29 @@ export const ProfileScreen = ({ navigation }) => {
       source={require('../../../img/bg/starttBG.jpg')}
       style={{ ...style.background, width, height }}
     >
-      <View style={style.profileField}>
-        <View style={style.avatar}>
-          <Image source={require('../../../img/mock/Profile.png')} />
-          <AddPhotoBtn
-            style={{ bottom: 14, right: -25 / 2 }}
-            {...{ isAdded, changeAvatar }}
+      <FlatList
+        style={{ flex: 1, marginTop: 32 }}
+        data={posts}
+        ListHeaderComponent={
+          <PostHeader {...{ navigation, isAdded, changeAvatar }} />
+        }
+        renderItem={({ item }) => (
+          <PostBody
+            image={item.photo}
+            title={item.title}
+            coments={item.coments}
+            likes={item.likes}
+            location={item.location}
           />
-        </View>
-        <LogOutBtn
-          style={{ alignSelf: 'flex-end', marginRight: 16, marginTop: 22 }}
-          {...{ navigation }}
-        />
-        <Text style={style.title}>Natali Romanova</Text>
-      </View>
+        )}
+        keyExtractor={item => item.id}
+        ListFooterComponent={() => (
+          <View style={{ height: 126, backgroundColor: '#fff' }} />
+        )}
+        ItemSeparatorComponent={() => (
+          <View style={{ height: 32, backgroundColor: '#fff' }} />
+        )}
+      />
     </ImageBackground>
   );
 };

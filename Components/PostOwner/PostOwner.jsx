@@ -1,7 +1,7 @@
 import { Image, Text, View } from 'react-native';
 
 import { style } from './Post.styles';
-export const Post = ({ name, image, email }) => {
+export const PostOwner = ({ name, image, email }) => {
   return (
     <View style={style.postContainer}>
       <View>
