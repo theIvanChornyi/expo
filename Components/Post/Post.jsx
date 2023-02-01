@@ -1,17 +1,14 @@
-import { Image, Text, View } from 'react-native';
+import { View } from 'react-native';
+import { PostOwner } from '../PostOwner/PostOwner';
+import { PostBody } from '../PostBody/PostBody';
 
-import { style } from './Post.styles';
-
-export const Post = props => {
-  console.log('props', props);
+export const Post = ({ owner, ...other }) => {
+  const { avatar: image } = owner;
+  const { photo } = other;
   return (
     <View>
-      {/* <PostOwner
-      // {...(name, image, email)}
-      />
-      <PostBody
-      // {...{ image, title, coments, likes, location }}
-      /> */}
+      <PostOwner {...{ ...owner, image }} />
+      <PostBody {...{ ...other, image: photo }} />
     </View>
   );
 };

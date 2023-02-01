@@ -6,6 +6,8 @@ export const style = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 16,
+    marginBottom: 32,
   },
   postImage: {
     width: 60,
@@ -14,6 +16,17 @@ export const style = StyleSheet.create({
   postText: {
     marginLeft: 8,
   },
-  postName: {},
-  postEmail: {},
+  postName: {
+    fontFamily: 'Roboto-Bold',
+    fontSize: 13,
+    lineHeight: 15,
+    color: '#212121',
+  },
+  postEmail: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: 11,
+    lineHeight: 13,
+    color: '#212121',
+    opacity: 0.8,
+  },
 });
