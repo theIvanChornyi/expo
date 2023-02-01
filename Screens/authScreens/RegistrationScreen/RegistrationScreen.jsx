@@ -14,7 +14,7 @@ import {
 import { useKeyboardStatus } from '../../../Hooks/useKeyboardStatus/useKeyboardStatus.js';
 import { style } from './RegistrationScreen.styles';
 import { useDeviceSize } from '../../../Hooks/useDeviceSize/useDeviceSize.js';
-import Plus from '../../../img/svg/add.svg';
+import { AddPhotoBtn } from '../../../Components/AddPhotoBtn/AddPhotoBtn.jsx';
 
 const initialState = {
   login: '',
@@ -30,6 +30,10 @@ export const RegistrationScreen = ({ navigation }) => {
 
   const isShowKeyboard = useKeyboardStatus();
   const { width, height } = useDeviceSize();
+
+  const changeAvatar = () => {
+    setIsAdded(p => !p);
+  };
 
   const hideKeyborard = () => {
     setIsHide(true);
@@ -51,7 +55,7 @@ export const RegistrationScreen = ({ navigation }) => {
       >
         <ImageBackground
           source={require('../../../img/bg/starttBG.jpg')}
-          style={{ ...style.background, width }}
+          style={{ ...style.background, width, height }}
         >
           <View
             style={{
@@ -60,19 +64,11 @@ export const RegistrationScreen = ({ navigation }) => {
             }}
           >
             <View style={style.avatarContainer}>
-              <Image style={style.avatar} />
-              <TouchableOpacity
-                activeOpacity={1}
-                style={style.addAvatarBtn}
-                onPress={() => setIsAdded(p => !p)}
-              >
-                <Plus
-                  stroke={isAdded ? '#BDBDBD' : '#FF6C00'}
-                  style={{
-                    transform: [{ rotate: isAdded ? '45deg' : '0deg' }],
-                  }}
-                />
-              </TouchableOpacity>
+              <Image />
+              <AddPhotoBtn
+                style={{ bottom: 14, right: -25 / 2 }}
+                {...{ isAdded, changeAvatar }}
+              />
             </View>
             <Text style={style.title}>Регистрация</Text>
 

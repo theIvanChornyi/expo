@@ -1,12 +1,10 @@
 import { TouchableOpacity } from 'react-native';
 import LogOut from '../../img/svg/logOut.svg';
 
-import { style } from './LogOutBtn.style';
-
-export const LogOutBtn = ({ navigation }) => {
+export const LogOutBtn = ({ navigation, style }) => {
   return (
     <TouchableOpacity
-      style={style.LogOutBtn}
+      style={style}
       onPress={() => navigation.navigate('login')}
     >
       <LogOut />

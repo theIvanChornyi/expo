@@ -47,7 +47,7 @@ export const LoginScreen = ({ navigation }) => {
       >
         <ImageBackground
           source={require('../../../img/bg/starttBG.jpg')}
-          style={{ ...style.background, width }}
+          style={{ ...style.background, width, height }}
         >
           <View
             style={{

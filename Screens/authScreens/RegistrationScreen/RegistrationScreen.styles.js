@@ -1,8 +1,7 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({
   background: {
-    height: Dimensions.get('window').height,
     position: 'absolute',
     top: 0,
     left: 0,

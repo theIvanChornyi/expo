@@ -40,6 +40,7 @@ export const PostsScreen = () => {
         data={posts}
         renderItem={({ item }) => <Post {...item} />}
         keyExtractor={item => item.id}
+        ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
       />
     </View>
   );

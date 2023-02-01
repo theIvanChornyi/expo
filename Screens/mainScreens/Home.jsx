@@ -18,14 +18,31 @@ export const Home = () => {
       initialRouteName="post"
       backBehavior="history"
       screenOptions={{
+        headerStyle: {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 0.5 },
+          shadowOpacity: 0.3,
+          shadowRadius: 0,
+        },
         tabBarShowLabel: false,
         tabBarInactiveTintColor: 'none',
         tabBarActiveTintColor: '#000',
         tabBarStyle: {
           paddingTop: 9,
           paddingHorizontal: 82,
-          paddingBottom: 34,
           height: 83,
+          paddingBottom: 34,
+          ...Platform.select({
+            ios: {
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: -0.5 },
+              shadowOpacity: 0.3,
+              shadowRadius: 0,
+            },
+            android: {
+              elevation: 1,
+            },
+          }),
         },
       }}
     >
@@ -35,9 +52,14 @@ export const Home = () => {
         options={props => ({
           title: 'Публикации',
           headerTitleAlign: 'center',
-          headerTitleStyle: { fontFamily: 'Roboto-Bold', fontSize: 17 },
+          headerTitleStyle: {
+            fontFamily: 'Roboto-Bold',
+            fontSize: 17,
+          },
 
-          headerRight: () => <LogOutBtn {...props} />,
+          headerRight: () => (
+            <LogOutBtn {...props} style={{ marginRight: 16 }} />
+          ),
           tabBarIcon: () => <PostsTab />,
         })}
       />
