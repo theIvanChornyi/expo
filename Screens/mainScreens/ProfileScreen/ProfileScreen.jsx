@@ -1,59 +1,56 @@
-import { useState } from 'react';
-import {
-  FlatList,
-  ImageBackground,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { ProfileDefaultScreen } from '../../nestedScreens/ProfileDefaultScreen/ProfileDefaultScreen';
+import { MapScreen } from '../../nestedScreens/MapScreen/MapScreen';
+import { CommentsScreen } from '../../nestedScreens/CommentsScreen/CommentsScreen';
+import { GoBackBtn } from '../../../Components/GoBackBtn/GoBackBtn';
 
-import { style } from './ProfileScreen.styles';
+const ProfileRoot = createStackNavigator();
 
-import data from '../../../assets/mockPosts';
-import { PostBody } from '../../../Components/PostBody/PostBody';
-import { PostHeader } from '../../../Components/PostHeader/PostHeader';
-
-export const ProfileScreen = ({ navigation }) => {
-  const [posts, setPosts] = useState(data);
-  const { height, width } = useWindowDimensions();
-
-  const [isAdded, setIsAdded] = useState(false);
-
-  const changeAvatar = () => {
-    setIsAdded(p => !p);
-  };
-
+export const ProfileScreen = () => {
   return (
-    <ImageBackground
-      source={require('../../../img/bg/starttBG.jpg')}
-      style={{
-        ...style.background,
-        width,
-        height: height < width ? width : height,
+    <ProfileRoot.Navigator
+      initialRouteName="ProfileDefaultScreen"
+      screenOptions={{
+        headerStyle: {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 0.5 },
+          shadowOpacity: 0.3,
+          shadowRadius: 0,
+        },
       }}
     >
-      <FlatList
-        style={{ flex: 1, marginTop: 32 }}
-        data={posts}
-        ListHeaderComponent={
-          <PostHeader {...{ navigation, isAdded, changeAvatar }} />
-        }
-        renderItem={({ item }) => (
-          <PostBody
-            image={item.photo}
-            title={item.title}
-            coments={item.coments}
-            likes={item.likes}
-            location={item.location}
-          />
-        )}
-        keyExtractor={item => item.id}
-        ListFooterComponent={() => (
-          <View style={{ height: 126, backgroundColor: '#fff' }} />
-        )}
-        ItemSeparatorComponent={() => (
-          <View style={{ height: 32, backgroundColor: '#fff' }} />
-        )}
+      <ProfileRoot.Screen
+        name="ProfileDefaultScreen"
+        component={ProfileDefaultScreen}
+        options={{ headerShown: false }}
       />
-    </ImageBackground>
+      <ProfileRoot.Screen
+        name="comments"
+        component={CommentsScreen}
+        options={{
+          title: 'Комментарии',
+          headerTitleAlign: 'center',
+
+          headerTitleStyle: {
+            fontFamily: 'Roboto-Bold',
+            fontSize: 17,
+          },
+          headerLeft: GoBackBtn,
+        }}
+      />
+      <ProfileRoot.Screen
+        name="map"
+        component={MapScreen}
+        options={{
+          title: 'Место',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'Roboto-Bold',
+            fontSize: 17,
+          },
+          headerLeft: GoBackBtn,
+        }}
+      />
+    </ProfileRoot.Navigator>
   );
 };

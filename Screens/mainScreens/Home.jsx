@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import { LogOutBtn } from '../../Components/LogOutBtn/LogOutBtn';
 import { PostsScreen } from './PostsScreen/PostsScreen';
 import { ProfileScreen } from './ProfileScreen/ProfileScreen';
 
@@ -52,19 +51,10 @@ export const Home = () => {
       <MainTabs.Screen
         name="post"
         component={PostsScreen}
-        options={props => ({
-          title: 'Публикации',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            fontFamily: 'Roboto-Bold',
-            fontSize: 17,
-          },
-
-          headerRight: () => (
-            <LogOutBtn {...props} style={{ marginRight: 16 }} />
-          ),
+        options={{
+          headerShown: false,
           tabBarIcon: () => <PostsTab />,
-        })}
+        }}
       />
       <MainTabs.Screen
         name="createPost"
@@ -72,7 +62,6 @@ export const Home = () => {
         options={props => ({
           headerShown: height > width,
           title: 'Создать публикацию',
-
           headerTitleAlign: 'center',
           headerTitleStyle: { fontFamily: 'Roboto-Bold', fontSize: 17 },
           tabBarStyle: { display: 'none' },
