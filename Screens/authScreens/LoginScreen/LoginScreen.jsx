@@ -55,13 +55,7 @@ export const LoginScreen = ({ navigation }) => {
               marginTop: isShowKeyboard ? 273 : 323,
             }}
           >
-            <Text
-              style={{
-                ...style.title,
-              }}
-            >
-              Войти
-            </Text>
+            <Text style={style.title}>Войти</Text>
             <TextInput
               style={{
                 ...style.authInput,
