@@ -1,35 +1,19 @@
-import { useState } from 'react';
-import { FlatList, useWindowDimensions, View } from 'react-native';
-import { Post } from '../../../Components/Post/Post';
-import { style } from './PostsScreen.styles';
+import { createStackNavigator } from '@react-navigation/stack';
+import { PostsDefaultScreen } from '../../nestedScreens/PostsDefaultScreen/PostsDefaultScreen';
+import { MapScreen } from '../../nestedScreens/MapScreen/MapScreen';
+import { CommentsScreen } from '../../nestedScreens/CommentsScreen/CommentsScreen';
 
-import data from '../../../assets/mockPosts';
+const PostsRoot = createStackNavigator();
 
 export const PostsScreen = () => {
-  const [posts, setPosts] = useState(data);
-
-  const { height, width } = useWindowDimensions();
-
   return (
-    <View
-      style={{
-        ...style.postsList,
-        width,
-        height: height < width ? width : height,
-      }}
+    <PostsRoot.Navigator
+      initialRouteName="defaultScreen"
+      screenOptions={{ headerShown: false }}
     >
-      <FlatList
-        data={posts}
-        renderItem={({ item }) => <Post {...item} />}
-        keyExtractor={item => item.id}
-        ListHeaderComponent={() => (
-          <View style={{ height: 32, backgroundColor: '#fff' }} />
-        )}
-        ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-        ListFooterComponent={() => (
-          <View style={{ height: 32, backgroundColor: '#fff' }} />
-        )}
-      />
-    </View>
+      <PostsRoot.Screen name="defaultScreen" component={PostsDefaultScreen} />
+      <PostsRoot.Screen name="comments" component={CommentsScreen} />
+      <PostsRoot.Screen name="map" component={MapScreen} />
+    </PostsRoot.Navigator>
   );
 };

@@ -18,7 +18,7 @@ export const PostBody = ({ image, title, coments, likes, location }) => {
       <View style={style.postWrapper}>
         <View style={style.buttons}>
           <PostBtn
-            callback={() => navigation.navigate('coments')}
+            callback={() => navigation.navigate('comments')}
             Icon={Coment}
             text={coments}
             style={{ marginRight: 24 }}
@@ -26,7 +26,10 @@ export const PostBody = ({ image, title, coments, likes, location }) => {
           <PostBtn callback={console.log} Icon={Like} text={likes} />
         </View>
 
-        <TouchableOpacity style={style.location}>
+        <TouchableOpacity
+          style={style.location}
+          onPress={() => navigation.navigate('map')}
+        >
           <Location style={style.locationImage} />
           <Text style={style.locationText}>{location}</Text>
         </TouchableOpacity>

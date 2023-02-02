@@ -22,7 +22,7 @@ export const PostCamera = ({
   const { height, width } = useWindowDimensions();
 
   return (
-    <View style={cameraStyle.imageWrapper}>
+    <View>
       {isUpload ? (
         <Image
           style={{

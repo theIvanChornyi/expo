@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Text,
   TextInput,
   TouchableWithoutFeedback,
   useWindowDimensions,
@@ -22,6 +21,7 @@ import { useKeyboardStatus } from '../../../Hooks/useKeyboardStatus/useKeyboardS
 
 import { style } from './CreatePostsScreen.styles';
 import { PostCamera } from '../../../Components/PostCamera/PostCamera';
+import { PostFilePicker } from '../../../Components/PostFilePicker/PostFilePicker';
 
 const initialState = {
   photo: null,
@@ -32,15 +32,13 @@ const initialState = {
 
 export const CreatePostsScreen = ({ navigation }) => {
   const [allowCam, requestAllowCam] = Camera.useCameraPermissions();
-  const [allowGeo, requestAllowGeo] = Location.useCameraPermissions();
   const [allowFile, requestAllowFile] = MediaLibrary.usePermissions();
+  const [allowGeo, requestAllowGeo] = Location.useForegroundPermissions();
 
   useEffect(() => {
     (async () => {
       try {
         await requestAllowCam();
-        await requestLibPermission();
-        await requestAllowGeo();
       } catch (error) {
         console.log(e);
       }
@@ -58,17 +56,33 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
 
   const [isUpload, setIsUpload] = useState(false);
-  const [isLoad, setIsLoad] = useState(true);
+  const [isLoad, setIsLoad] = useState(false);
 
   const hideKeyborard = () => {
     Keyboard.dismiss();
   };
 
+  const choisePhoto = async () => {
+    try {
+      await requestAllowFile();
+      if (allowFile.granted) {
+        const media = await MediaLibrary.getAssetsAsync({
+          mediaType: ['photo'],
+          first: 30,
+        });
+        // const video = await MediaLibrary.getAssetInfoAsync(media);
+        console.log(media);
+      }
+    } catch (error) {
+      console.log(e);
+    }
+  };
+
   const createPhoto = async () => {
     if (isLoad) return;
 
-    setIsLoad(true);
     try {
+      setIsLoad(true);
       const photo = await camera.takePictureAsync();
       setPostData(p => ({ ...p, photo }));
       setIsLoad(false);
@@ -79,16 +93,20 @@ export const CreatePostsScreen = ({ navigation }) => {
   };
 
   const deletePhoto = () => {
-    setPostData(p => ({ ...p, photo: null, location: null }));
+    setPostData(p => ({ ...p, photo: null }));
     setIsUpload(false);
   };
 
   const createPost = async () => {
     if (!postData.photo) return;
+
     try {
-      const location = await Location.getCurrentPositionAsync({});
-      setPostData(p => ({ ...p, location }));
-      navigation.navigate('post', postData);
+      await requestAllowGeo();
+      if (allowGeo.granted) {
+        const location = await Location.getCurrentPositionAsync({});
+        setPostData(p => ({ ...p, location }));
+      }
+      navigation.navigate('defaultScreen', postData);
       deletePostData();
     } catch (e) {
       console.log(e);
@@ -125,9 +143,10 @@ export const CreatePostsScreen = ({ navigation }) => {
             onPress={isUpload ? deletePhoto : createPhoto}
           />
 
-          <Text style={style.imageActionText}>
-            {isUpload ? 'Редактировать фото' : 'Загрузите фото'}
-          </Text>
+          <PostFilePicker
+            isUpload={isUpload}
+            onPress={isUpload ? deletePhoto : choisePhoto}
+          />
 
           <TextInput
             style={style.descriptionInp}
