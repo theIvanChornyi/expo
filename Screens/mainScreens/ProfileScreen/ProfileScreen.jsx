@@ -1,5 +1,10 @@
 import { useState } from 'react';
-import { Dimensions, FlatList, ImageBackground, View } from 'react-native';
+import {
+  FlatList,
+  ImageBackground,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 
 import { style } from './ProfileScreen.styles';
 
@@ -8,10 +13,8 @@ import { PostBody } from '../../../Components/PostBody/PostBody';
 import { PostHeader } from '../../../Components/PostHeader/PostHeader';
 
 export const ProfileScreen = ({ navigation }) => {
-  const height = Dimensions.get('window').height;
-  const width = Dimensions.get('window').width;
-
   const [posts, setPosts] = useState(data);
+  const { height, width } = useWindowDimensions();
 
   const [isAdded, setIsAdded] = useState(false);
 
@@ -22,7 +25,11 @@ export const ProfileScreen = ({ navigation }) => {
   return (
     <ImageBackground
       source={require('../../../img/bg/starttBG.jpg')}
-      style={{ ...style.background, width, height }}
+      style={{
+        ...style.background,
+        width,
+        height: height < width ? width : height,
+      }}
     >
       <FlatList
         style={{ flex: 1, marginTop: 32 }}

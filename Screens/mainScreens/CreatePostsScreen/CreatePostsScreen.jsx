@@ -5,10 +5,12 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  useWindowDimensions,
   View,
 } from 'react-native';
 
@@ -28,9 +30,7 @@ const initialState = {
 
 export const CreatePostsScreen = ({ navigate }) => {
   const [postData, setPostData] = useState(initialState);
-
-  const height = Dimensions.get('window').height;
-  const width = Dimensions.get('window').width;
+  const { height, width } = useWindowDimensions();
 
   const isShowKeyboard = useKeyboardStatus();
 
@@ -46,10 +46,15 @@ export const CreatePostsScreen = ({ navigate }) => {
   const deletePostData = () => setPostData(initialState);
 
   return (
-    <>
-      <TouchableWithoutFeedback
-        onPress={hideKeyborard}
-        style={{ flex: 1, height }}
+    <TouchableWithoutFeedback onPress={hideKeyborard} style={{ flex: 1 }}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}
+        style={{
+          flex: 1,
+          backgroundColor: '#fff',
+          width,
+          height: height < width ? width : height,
+        }}
       >
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
@@ -97,8 +102,8 @@ export const CreatePostsScreen = ({ navigate }) => {
             style={style.submitBtn}
           />
         </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
-      <DeleteBtn callBack={deletePostData} style={style.deleteBtn} />
-    </>
+        <DeleteBtn callBack={deletePostData} style={style.deleteBtn} />
+      </ScrollView>
+    </TouchableWithoutFeedback>
   );
 };

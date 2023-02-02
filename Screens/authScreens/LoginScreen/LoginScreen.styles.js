@@ -9,10 +9,9 @@ export const style = StyleSheet.create({
     bottom: 0,
     zIndex: -1,
   },
-  container: {
-    flex: 1,
-  },
+  container: {},
   authField: {
+    flex: 1,
     backgroundColor: '#FFFFFF',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,

@@ -3,15 +3,12 @@ import { StyleSheet } from 'react-native';
 export const style = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
     paddingBottom: 34,
     backgroundColor: '#fff',
     paddingHorizontal: 16,
   },
 
-  imageWrapper: {
-    position: 'relative',
-  },
+  imageWrapper: {},
   postImage: {},
   defaultImage: {
     minHeight: 240,
@@ -63,9 +60,7 @@ export const style = StyleSheet.create({
     borderStyle: 'solid',
   },
 
-  locationWrapper: {
-    position: 'relative',
-  },
+  locationWrapper: {},
   locationIco: {
     position: 'absolute',
     top: '50%',
@@ -93,8 +88,7 @@ export const style = StyleSheet.create({
   },
 
   deleteBtn: {
-    position: 'absolute',
-    bottom: 34,
+    marginVertical: 34,
     left: '50%',
     transform: [{ translateX: -35 }],
   },
