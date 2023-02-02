@@ -7,12 +7,15 @@ import {
   View,
   Keyboard,
   Text,
-  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import { useDeviceSize } from '../../../Hooks/useDeviceSize/useDeviceSize.js';
 import { useKeyboardStatus } from '../../../Hooks/useKeyboardStatus/useKeyboardStatus.js';
 
+import { SubmitBtn } from '../../../Components/SubmitBtn/SubmitBtn';
 import { style } from './LoginScreen.styles.js';
+import { NavAuthLink } from '../../../Components/NavAuthLink/NavAuthLink.jsx';
+import { SecretPassBtn } from '../../../Components/SecretPassBtn/SecretPassBtn.jsx';
 
 const initialState = {
   email: '',
@@ -49,7 +52,7 @@ export const LoginScreen = ({ navigation }) => {
           source={require('../../../img/bg/starttBG.jpg')}
           style={{ ...style.background, width, height }}
         >
-          <View
+          <ScrollView
             style={{
               ...style.authField,
               marginTop: isShowKeyboard ? 273 : 323,
@@ -91,28 +94,23 @@ export const LoginScreen = ({ navigation }) => {
                   setActiveField('');
                 }}
               />
-              <TouchableOpacity
-                style={style.passwordBtn}
-                activeOpacity={0.4}
-                onPress={() => setIsHide(p => !p)}
-              >
-                <Text style={style.passwordBtnText}>Показать</Text>
-              </TouchableOpacity>
+              <SecretPassBtn
+                callback={() => setIsHide(p => !p)}
+                isHide={isHide}
+              />
             </View>
 
-            <TouchableOpacity style={style.submitBtn} onPress={login}>
-              <Text style={style.submitBtnText}>Войти</Text>
-            </TouchableOpacity>
+            <SubmitBtn
+              title={'Войти'}
+              callback={login}
+              style={style.submitBtn}
+            />
 
-            <TouchableOpacity
-              style={style.navBtn}
-              onPress={() => navigation.navigate('register')}
-            >
-              <Text style={style.navBtnText}>
-                Нет аккаунта? Зарегистрироваться
-              </Text>
-            </TouchableOpacity>
-          </View>
+            <NavAuthLink
+              title={'Нет аккаунта? Зарегистрироваться'}
+              callback={() => navigation.navigate('register')}
+            />
+          </ScrollView>
         </ImageBackground>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>

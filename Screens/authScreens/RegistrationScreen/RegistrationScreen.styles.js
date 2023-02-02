@@ -70,46 +70,8 @@ export const style = StyleSheet.create({
   passwordWrapper: {
     position: 'relative',
   },
-  passwordInp: {},
-  passwordBtn: {
-    position: 'absolute',
-    right: 16,
-
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-  },
-  passwordBtnText: {
-    fontFamily: 'Roboto-Regular',
-    fontSize: 16,
-    lineHeight: 19,
-    color: '#1B4371',
-  },
   submitBtn: {
-    paddingHorizontal: 32,
-    paddingVertical: 16,
     marginHorizontal: 16,
     marginTop: 43,
-
-    backgroundColor: '#FF6C00',
-    borderRadius: 100,
-  },
-  submitBtnText: {
-    fontFamily: 'Roboto-Regular',
-    fontSize: 16,
-    lineHeight: 19,
-    color: '#FFFFFF',
-    textAlign: 'center',
-  },
-  navBtn: {
-    marginTop: 16,
-    paddingBottom: 7,
-    marginBottom: 260,
-  },
-  navBtnText: {
-    textAlign: 'center',
-    fontFamily: 'Roboto-Regular',
-    fontSize: 16,
-    lineHeight: 19,
-    color: '#1B4371',
   },
 });

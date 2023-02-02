@@ -15,6 +15,9 @@ import { useKeyboardStatus } from '../../../Hooks/useKeyboardStatus/useKeyboardS
 import { style } from './RegistrationScreen.styles';
 import { useDeviceSize } from '../../../Hooks/useDeviceSize/useDeviceSize.js';
 import { AddPhotoBtn } from '../../../Components/AddPhotoBtn/AddPhotoBtn.jsx';
+import { SubmitBtn } from '../../../Components/SubmitBtn/SubmitBtn.jsx';
+import { NavAuthLink } from '../../../Components/NavAuthLink/NavAuthLink.jsx';
+import { SecretPassBtn } from '../../../Components/SecretPassBtn/SecretPassBtn.jsx';
 
 const initialState = {
   login: '',
@@ -120,25 +123,21 @@ export const RegistrationScreen = ({ navigation }) => {
                   setActiveField('');
                 }}
               />
-              <TouchableOpacity
-                style={style.passwordBtn}
-                activeOpacity={0.4}
-                onPress={() => setIsHide(p => !p)}
-              >
-                <Text style={style.passwordBtnText}>Показать</Text>
-              </TouchableOpacity>
+              <SecretPassBtn
+                callback={() => setIsHide(p => !p)}
+                isHide={isHide}
+              />
             </View>
 
-            <TouchableOpacity style={style.submitBtn} onPress={login}>
-              <Text style={style.submitBtnText}>Зарегистрироваться</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={style.navBtn}
-              onPress={() => navigation.navigate('login')}
-            >
-              <Text style={style.navBtnText}>Уже есть аккаунт? Войти</Text>
-            </TouchableOpacity>
+            <SubmitBtn
+              title={'Зарегистрироваться'}
+              callback={login}
+              style={style.submitBtn}
+            />
+            <NavAuthLink
+              title={'Уже есть аккаунт? Войти'}
+              callback={() => navigation.navigate('login')}
+            />
           </View>
         </ImageBackground>
       </KeyboardAvoidingView>

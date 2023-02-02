@@ -4,8 +4,11 @@ import Like from '../../img/svg/like.svg';
 import Coment from '../../img/svg/messageCircle.svg';
 import Location from '../../img/svg/mapPin.svg';
 import { PostBtn } from '../PostBtn/PostBtn';
+import { NavigationContext } from '@react-navigation/native';
+import { useContext } from 'react';
 
 export const PostBody = ({ image, title, coments, likes, location }) => {
+  const navigation = useContext(NavigationContext);
   return (
     <View style={style.container}>
       <Image source={image} style={{ ...style.picture }} />
@@ -14,8 +17,13 @@ export const PostBody = ({ image, title, coments, likes, location }) => {
 
       <View style={style.postWrapper}>
         <View style={style.buttons}>
-          <PostBtn Icon={Coment} text={coments} style={{ marginRight: 24 }} />
-          <PostBtn Icon={Like} text={likes} />
+          <PostBtn
+            callback={() => navigation.navigate('coments')}
+            Icon={Coment}
+            text={coments}
+            style={{ marginRight: 24 }}
+          />
+          <PostBtn callback={console.log} Icon={Like} text={likes} />
         </View>
 
         <TouchableOpacity style={style.location}>

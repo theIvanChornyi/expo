@@ -5,19 +5,19 @@ import { LoginScreen } from '../Screens/authScreens/LoginScreen/LoginScreen';
 import { RegistrationScreen } from '../Screens/authScreens/RegistrationScreen/RegistrationScreen';
 import { Home } from '../Screens/mainScreens/Home';
 
-const AuthStack = createNativeStackNavigator();
+const RootStack = createNativeStackNavigator();
 
 export const Router = () => {
   return (
     <NavigationContainer>
-      <AuthStack.Navigator
+      <RootStack.Navigator
         initialRouteName="login"
         screenOptions={{ headerShown: false }}
       >
-        <AuthStack.Screen name="login" component={LoginScreen} />
-        <AuthStack.Screen name="register" component={RegistrationScreen} />
-        <AuthStack.Screen name="home" component={Home} />
-      </AuthStack.Navigator>
+        <RootStack.Screen name="login" component={LoginScreen} />
+        <RootStack.Screen name="register" component={RegistrationScreen} />
+        <RootStack.Screen name="home" component={Home} />
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 };
