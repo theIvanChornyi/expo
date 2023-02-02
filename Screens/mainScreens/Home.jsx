@@ -9,10 +9,13 @@ import { CreatePostsScreen } from './CreatePostsScreen/CreatePostsScreen';
 import { GoBackBtn } from '../../Components/GoBackBtn/GoBackBtn';
 import { ProfileTab } from '../../Components/ProfileTab/ProfileTab';
 import { PostsTab } from '../../Components/PostsTab/PostsTab';
+import { useWindowDimensions } from 'react-native';
 
 const MainTabs = createBottomTabNavigator();
 
 export const Home = () => {
+  const { height, width } = useWindowDimensions();
+
   return (
     <MainTabs.Navigator
       initialRouteName="post"
@@ -67,7 +70,9 @@ export const Home = () => {
         name="createPost"
         component={CreatePostsScreen}
         options={props => ({
+          headerShown: height > width,
           title: 'Создать публикацию',
+
           headerTitleAlign: 'center',
           headerTitleStyle: { fontFamily: 'Roboto-Bold', fontSize: 17 },
           tabBarStyle: { display: 'none' },

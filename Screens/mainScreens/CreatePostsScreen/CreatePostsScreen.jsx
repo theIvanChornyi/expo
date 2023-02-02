@@ -1,80 +1,132 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Camera } from 'expo-camera';
+import * as Location from 'expo-location';
+import * as MediaLibrary from 'expo-media-library';
 import {
-  Dimensions,
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   useWindowDimensions,
   View,
 } from 'react-native';
 
 import MapPin from '../../../img/svg/mapPin.svg';
-import Camera from '../../../img/svg/camera.svg';
 
 import { DeleteBtn } from '../../../Components/DeleteBtn/DeleteBtn';
 import { SubmitBtn } from '../../../Components/SubmitBtn/SubmitBtn';
 import { useKeyboardStatus } from '../../../Hooks/useKeyboardStatus/useKeyboardStatus';
 
 import { style } from './CreatePostsScreen.styles';
+import { PostCamera } from '../../../Components/PostCamera/PostCamera';
 
 const initialState = {
+  photo: null,
+  location: null,
   description: '',
-  location: '',
+  place: '',
 };
 
-export const CreatePostsScreen = ({ navigate }) => {
-  const [postData, setPostData] = useState(initialState);
-  const { height, width } = useWindowDimensions();
+export const CreatePostsScreen = ({ navigation }) => {
+  const [allowCam, requestAllowCam] = Camera.useCameraPermissions();
+  const [allowGeo, requestAllowGeo] = Location.useCameraPermissions();
+  const [allowFile, requestAllowFile] = MediaLibrary.usePermissions();
 
+  useEffect(() => {
+    (async () => {
+      try {
+        await requestAllowCam();
+        await requestLibPermission();
+        await requestAllowGeo();
+      } catch (error) {
+        console.log(e);
+      }
+    })();
+
+    return () => {
+      deletePostData();
+    };
+  }, []);
+
+  const { height, width } = useWindowDimensions();
   const isShowKeyboard = useKeyboardStatus();
+
+  const [postData, setPostData] = useState(initialState);
+  const [camera, setCamera] = useState(null);
+
+  const [isUpload, setIsUpload] = useState(false);
+  const [isLoad, setIsLoad] = useState(true);
 
   const hideKeyborard = () => {
     Keyboard.dismiss();
   };
 
-  const createPost = () => {
-    console.log(postData);
-    deletePostData();
+  const createPhoto = async () => {
+    if (isLoad) return;
+
+    setIsLoad(true);
+    try {
+      const photo = await camera.takePictureAsync();
+      setPostData(p => ({ ...p, photo }));
+      setIsLoad(false);
+      setIsUpload(true);
+    } catch (error) {
+      console.log(e);
+    }
   };
 
-  const deletePostData = () => setPostData(initialState);
+  const deletePhoto = () => {
+    setPostData(p => ({ ...p, photo: null, location: null }));
+    setIsUpload(false);
+  };
 
-  return (
+  const createPost = async () => {
+    if (!postData.photo) return;
+    try {
+      const location = await Location.getCurrentPositionAsync({});
+      setPostData(p => ({ ...p, location }));
+      navigation.navigate('post', postData);
+      deletePostData();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const deletePostData = () => {
+    setPostData(initialState);
+    setIsUpload(false);
+  };
+
+  return height > width ? (
     <TouchableWithoutFeedback onPress={hideKeyborard} style={{ flex: 1 }}>
       <ScrollView
-        contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'space-between',
+        }}
         style={{
           flex: 1,
           backgroundColor: '#fff',
-          width,
-          height: height < width ? width : height,
         }}
       >
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
           style={{ ...style.container, paddingTop: isShowKeyboard ? 0 : 32 }}
         >
-          <View style={style.imageWrapper}>
-            {false ? (
-              <Image style={style.postImage} />
-            ) : (
-              <View style={style.defaultImage} />
-            )}
-            <TouchableOpacity
-              style={{ ...style.cameraContainer, opacity: true ? 1 : 0.3 }}
-            >
-              <Camera />
-            </TouchableOpacity>
-          </View>
+          <PostCamera
+            isUpload={isUpload}
+            postData={postData}
+            isLoad={isLoad}
+            onCameraReady={() => setIsLoad(false)}
+            setCamera={setCamera}
+            onPress={isUpload ? deletePhoto : createPhoto}
+          />
 
           <Text style={style.imageActionText}>
-            {false ? 'Редактировать фото' : 'Загрузите фото'}
+            {isUpload ? 'Редактировать фото' : 'Загрузите фото'}
           </Text>
 
           <TextInput
@@ -89,14 +141,15 @@ export const CreatePostsScreen = ({ navigate }) => {
             <MapPin style={style.locationIco} />
             <TextInput
               style={style.locationInp}
-              value={postData.location}
+              value={postData.place}
               placeholder="Местность..."
               placeholderTextColor="#BDBDBD"
-              onChangeText={v => setPostData(p => ({ ...p, location: v }))}
+              onChangeText={v => setPostData(p => ({ ...p, place: v }))}
             />
           </View>
 
           <SubmitBtn
+            disabled={!postData.photo}
             title={'Опубликовать'}
             callback={createPost}
             style={style.submitBtn}
@@ -105,5 +158,14 @@ export const CreatePostsScreen = ({ navigate }) => {
         <DeleteBtn callBack={deletePostData} style={style.deleteBtn} />
       </ScrollView>
     </TouchableWithoutFeedback>
+  ) : (
+    <PostCamera
+      isUpload={isUpload}
+      postData={postData}
+      isLoad={isLoad}
+      onCameraReady={() => setIsLoad(false)}
+      setCamera={setCamera}
+      onPress={isUpload ? deletePhoto : createPhoto}
+    />
   );
 };
