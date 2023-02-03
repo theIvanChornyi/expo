@@ -29,23 +29,6 @@ export const Home = () => {
         tabBarShowLabel: false,
         tabBarInactiveTintColor: 'none',
         tabBarActiveTintColor: '#000',
-        tabBarStyle: {
-          paddingTop: 9,
-          paddingHorizontal: 82,
-          height: 83,
-          paddingBottom: 34,
-          ...Platform.select({
-            ios: {
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: -0.5 },
-              shadowOpacity: 0.3,
-              shadowRadius: 0,
-            },
-            android: {
-              elevation: 1,
-            },
-          }),
-        },
       }}
     >
       <MainTabs.Screen
@@ -53,28 +36,28 @@ export const Home = () => {
         component={PostsScreen}
         options={{
           headerShown: false,
-          tabBarIcon: () => <PostsTab />,
+          tabBarIcon: PostsTab,
         }}
       />
       <MainTabs.Screen
         name="createPost"
         component={CreatePostsScreen}
-        options={props => ({
+        options={{
           headerShown: height > width,
           title: 'Создать публикацию',
           headerTitleAlign: 'center',
           headerTitleStyle: { fontFamily: 'Roboto-Bold', fontSize: 17 },
           tabBarStyle: { display: 'none' },
-          headerLeft: () => <GoBackBtn {...props} />,
-          tabBarIcon: () => <CreatePostTab />,
-        })}
+          headerLeft: GoBackBtn,
+          tabBarIcon: CreatePostTab,
+        }}
       />
       <MainTabs.Screen
         name="profile"
         component={ProfileScreen}
         options={{
           headerShown: false,
-          tabBarIcon: () => <ProfileTab />,
+          tabBarIcon: ProfileTab,
         }}
       />
     </MainTabs.Navigator>

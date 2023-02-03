@@ -5,9 +5,13 @@ import { CommentsScreen } from '../../nestedScreens/CommentsScreen/CommentsScree
 import { LogOutBtn } from '../../../Components/LogOutBtn/LogOutBtn';
 import { GoBackBtn } from '../../../Components/GoBackBtn/GoBackBtn';
 
+import { useTabsHide } from '../../../Hooks/useKeyboardStatus/useTabsHide';
+
 const PostsRoot = createStackNavigator();
 
-export const PostsScreen = () => {
+export const PostsScreen = ({ navigation, route }) => {
+  useTabsHide({ navigation, route });
+
   return (
     <PostsRoot.Navigator
       initialRouteName="defaultScreen"

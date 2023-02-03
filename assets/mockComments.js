@@ -14,7 +14,36 @@ export default [
     data: '09 июня, 2020 | 09:14',
   },
   {
-    id: 2,
+    id: 3,
+    avatar: require('../img/mock/Ellipse.png'),
+    name: '',
+    text: 'Thank you! That was very helpful!',
+    data: '09 июня, 2020 | 09:20',
+  },
+
+  {
+    id: 4,
+    avatar: require('../img/mock/Ellipse.png'),
+    name: '',
+    text: 'Thank you! That was very helpful!',
+    data: '09 июня, 2020 | 09:20',
+  },
+  {
+    id: 5,
+    avatar: require('../img/mock/Ellipse.png'),
+    name: '',
+    text: 'Thank you! That was very helpful!',
+    data: '09 июня, 2020 | 09:20',
+  },
+  {
+    id: 6,
+    avatar: require('../img/mock/Ellipse.png'),
+    name: '',
+    text: 'Thank you! That was very helpful!',
+    data: '09 июня, 2020 | 09:20',
+  },
+  {
+    id: 7,
     avatar: require('../img/mock/Ellipse.png'),
     name: '',
     text: 'Thank you! That was very helpful!',

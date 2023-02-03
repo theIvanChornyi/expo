@@ -4,9 +4,13 @@ import { MapScreen } from '../../nestedScreens/MapScreen/MapScreen';
 import { CommentsScreen } from '../../nestedScreens/CommentsScreen/CommentsScreen';
 import { GoBackBtn } from '../../../Components/GoBackBtn/GoBackBtn';
 
+import { useTabsHide } from '../../../Hooks/useKeyboardStatus/useTabsHide';
+
 const ProfileRoot = createStackNavigator();
 
-export const ProfileScreen = () => {
+export const ProfileScreen = ({ navigation, route }) => {
+  useTabsHide({ navigation, route });
+
   return (
     <ProfileRoot.Navigator
       initialRouteName="ProfileDefaultScreen"
@@ -30,7 +34,6 @@ export const ProfileScreen = () => {
         options={{
           title: 'Комментарии',
           headerTitleAlign: 'center',
-
           headerTitleStyle: {
             fontFamily: 'Roboto-Bold',
             fontSize: 17,
