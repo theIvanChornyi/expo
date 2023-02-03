@@ -4,16 +4,14 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import { FlatList, Image, Text, TextInput, View } from 'react-native';
+import { FlatList, Image, TextInput, View } from 'react-native';
 import data from '../../../assets/mockComments';
 import { Coment } from '../../../Components/Coment/Coment';
-import { useKeyboardStatus } from '../../../Hooks/useKeyboardStatus/useKeyboardStatus';
 
 import SendArrow from '../../../img/svg/Vector.svg';
 
 import { style } from './CommentsScreen.styles';
 export const CommentsScreen = () => {
-  const isShowKeyboard = useKeyboardStatus();
   const { height, width } = useWindowDimensions();
 
   return (
