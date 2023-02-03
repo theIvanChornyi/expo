@@ -37,10 +37,8 @@ export const LoginScreen = ({ navigation }) => {
   };
 
   const login = () => {
-    console.log(authData);
     hideKeyborard();
     setAuthData(initialState);
-    navigation.navigate('home');
   };
 
   return (

@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+
 import {
   ImageBackground,
   KeyboardAvoidingView,
@@ -18,6 +20,7 @@ import { AddPhotoBtn } from '../../../Components/AddPhotoBtn/AddPhotoBtn.jsx';
 import { SubmitBtn } from '../../../Components/SubmitBtn/SubmitBtn.jsx';
 import { NavAuthLink } from '../../../Components/NavAuthLink/NavAuthLink.jsx';
 import { SecretPassBtn } from '../../../Components/SecretPassBtn/SecretPassBtn.jsx';
+import { signUpUser } from '../../../redux/auth/authThunks.js';
 
 const initialState = {
   login: '',
@@ -27,13 +30,14 @@ const initialState = {
 
 export const RegistrationScreen = ({ navigation }) => {
   const { height, width } = useWindowDimensions();
+  const isShowKeyboard = useKeyboardStatus();
 
   const [authData, setAuthData] = useState(initialState);
   const [isHide, setIsHide] = useState(true);
   const [activeField, setActiveField] = useState('');
   const [isAdded, setIsAdded] = useState(false);
 
-  const isShowKeyboard = useKeyboardStatus();
+  const dispatch = useDispatch();
 
   const changeAvatar = () => {
     setIsAdded(p => !p);
@@ -45,10 +49,9 @@ export const RegistrationScreen = ({ navigation }) => {
   };
 
   const login = () => {
-    console.log(authData);
+    dispatch(signUpUser());
     hideKeyborard();
     setAuthData(initialState);
-    navigation.navigate('home');
   };
 
   return (

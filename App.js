@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LoginScreen } from './Screens/authScreens/LoginScreen/LoginScreen';
 import { RegistrationScreen } from './Screens/authScreens/RegistrationScreen/RegistrationScreen';
 import { Home } from './Screens/mainScreens/Home';
+import { ReduxProvider } from './redux/store';
 
 const AuthStack = createNativeStackNavigator();
 export default function App() {
@@ -26,15 +27,17 @@ export default function App() {
     return null;
   }
   return (
-    <NavigationContainer onLayout={onLayoutRootView}>
-      <AuthStack.Navigator
-        initialRouteName="login"
-        screenOptions={{ headerShown: false }}
-      >
-        <AuthStack.Screen name="login" component={LoginScreen} />
-        <AuthStack.Screen name="register" component={RegistrationScreen} />
-        <AuthStack.Screen name="home" component={Home} />
-      </AuthStack.Navigator>
-    </NavigationContainer>
+    <ReduxProvider>
+      <NavigationContainer onLayout={onLayoutRootView}>
+        <AuthStack.Navigator
+          initialRouteName="login"
+          screenOptions={{ headerShown: false }}
+        >
+          <AuthStack.Screen name="login" component={LoginScreen} />
+          <AuthStack.Screen name="register" component={RegistrationScreen} />
+          <AuthStack.Screen name="home" component={Home} />
+        </AuthStack.Navigator>
+      </NavigationContainer>
+    </ReduxProvider>
   );
 }
