@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import Toast from 'react-native-root-toast';
 
 import {
   ImageBackground,
@@ -21,7 +22,11 @@ import { SubmitBtn } from '../../../Components/SubmitBtn/SubmitBtn.jsx';
 import { NavAuthLink } from '../../../Components/NavAuthLink/NavAuthLink.jsx';
 import { SecretPassBtn } from '../../../Components/SecretPassBtn/SecretPassBtn.jsx';
 import { signUpUser } from '../../../redux/auth/authThunks.js';
-import { validateLogin } from '../../../helpers/validation.js';
+import {
+  validateLogin,
+  validateEmail,
+  validatePassword,
+} from '../../../helpers/validation.js';
 
 const initialState = {
   login: '',
@@ -36,6 +41,9 @@ export const RegistrationScreen = ({ navigation }) => {
   const [authData, setAuthData] = useState(initialState);
   const [isHide, setIsHide] = useState(true);
   const [activeField, setActiveField] = useState('');
+  const [invalidFields, setInvalidFields] = useState([]);
+  const [toast, setToast] = useState(null);
+
   const [isAdded, setIsAdded] = useState(false);
 
   const dispatch = useDispatch();
@@ -44,21 +52,63 @@ export const RegistrationScreen = ({ navigation }) => {
     setIsAdded(p => !p);
   };
 
+  const hideAll = () => {
+    hideKeyborard();
+    toast && Toast.hide(toast);
+  };
+
   const hideKeyborard = () => {
     setIsHide(true);
     Keyboard.dismiss();
   };
 
-  const login = () => {
+  const signIn = () => {
     dispatch(signUpUser(authData));
-    hideKeyborard();
+    hideAll();
     setAuthData(initialState);
   };
 
-  const validateNickname = () => {
+  const validateNicknameField = () => {
     const isValid = validateLogin(authData.login);
-
+    toast && Toast.hide(toast);
+    if (!isValid) {
+      setToast(
+        Toast.show('Nikcname can includes only letters!', {
+          position: 0,
+        })
+      );
+      setInvalidFields(p => [...p, 'login']);
+    } else setInvalidFields(p => [...p.filter(name => name !== 'login')]);
     setActiveField('');
+  };
+
+  const validateEmailField = () => {
+    const isValid = validateEmail(authData.email);
+    toast && Toast.hide(toast);
+    if (!isValid) {
+      setToast(
+        Toast.show('It should valid email adress!', {
+          position: 0,
+        })
+      );
+      setInvalidFields(p => [...p, 'email']);
+    } else setInvalidFields(p => [...p.filter(name => name !== 'email')]);
+    setActiveField('');
+  };
+
+  const validatePasswordField = () => {
+    const isValid = validatePassword(authData.password);
+    toast && Toast.hide(toast);
+    if (!isValid) {
+      setToast(
+        Toast.show('It should valid password!', {
+          position: 0,
+        })
+      );
+      setInvalidFields(p => [...p, 'password']);
+    } else setInvalidFields(p => [...p.filter(name => name !== 'password')]);
+    setActiveField('');
+    setIsHide(true);
   };
 
   const focusOut = () => {
@@ -66,7 +116,7 @@ export const RegistrationScreen = ({ navigation }) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={hideKeyborard}>
+    <TouchableWithoutFeedback onPress={hideAll}>
       <ScrollView style={{ flex: 1 }}>
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
@@ -99,6 +149,9 @@ export const RegistrationScreen = ({ navigation }) => {
                 style={{
                   ...style.authInput,
                   borderColor: activeField === 'login' ? '#FF6C00' : '#E8E8E8',
+                  color: invalidFields.some(name => name === 'login')
+                    ? 'red'
+                    : '#212121',
                 }}
                 value={authData.login}
                 placeholder="Логин"
@@ -107,13 +160,16 @@ export const RegistrationScreen = ({ navigation }) => {
                   setAuthData(p => ({ ...p, login: value }))
                 }
                 onFocus={() => setActiveField('login')}
-                onBlur={validateNickname}
+                onBlur={validateNicknameField}
               />
 
               <TextInput
                 style={{
                   ...style.authInput,
                   borderColor: activeField === 'email' ? '#FF6C00' : '#E8E8E8',
+                  color: invalidFields.some(name => name === 'email')
+                    ? 'red'
+                    : '#212121',
                 }}
                 value={authData.email}
                 keyboardType={'email-address'}
@@ -123,7 +179,7 @@ export const RegistrationScreen = ({ navigation }) => {
                   setAuthData(p => ({ ...p, email: value }))
                 }
                 onFocus={() => setActiveField('email')}
-                onBlur={focusOut}
+                onBlur={validateEmailField}
               />
 
               <View style={style.passwordWrapper}>
@@ -133,6 +189,9 @@ export const RegistrationScreen = ({ navigation }) => {
                     ...style.passwordInp,
                     borderColor:
                       activeField === 'password' ? '#FF6C00' : '#E8E8E8',
+                    color: invalidFields.some(name => name === 'password')
+                      ? 'red'
+                      : '#212121',
                   }}
                   value={authData.password}
                   secureTextEntry={isHide}
@@ -142,10 +201,7 @@ export const RegistrationScreen = ({ navigation }) => {
                     setAuthData(p => ({ ...p, password: value }))
                   }
                   onFocus={() => setActiveField('password')}
-                  onBlur={() => {
-                    setIsHide(true);
-                    focusOut();
-                  }}
+                  onBlur={validatePasswordField}
                 />
                 <SecretPassBtn
                   callback={() => setIsHide(p => !p)}
@@ -155,8 +211,13 @@ export const RegistrationScreen = ({ navigation }) => {
 
               <SubmitBtn
                 title={'Зарегистрироваться'}
-                callback={login}
+                callback={signIn}
                 style={style.submitBtn}
+                disabled={
+                  !validateLogin(authData.login) &&
+                  !validateEmail(authData.email) &&
+                  !validatePassword(authData.password)
+                }
               />
               <NavAuthLink
                 title={'Уже есть аккаунт? Войти'}

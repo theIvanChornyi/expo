@@ -1,4 +1,5 @@
 import { useFonts } from 'expo-font';
+import { RootSiblingParent } from 'react-native-root-siblings';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
@@ -22,10 +23,12 @@ export default function App() {
     return null;
   }
   return (
-    <ReduxProvider>
-      <NavigationContainer onLayout={onLayoutRootView}>
-        <Router />
-      </NavigationContainer>
-    </ReduxProvider>
+    <RootSiblingParent>
+      <ReduxProvider>
+        <NavigationContainer onLayout={onLayoutRootView}>
+          <Router />
+        </NavigationContainer>
+      </ReduxProvider>
+    </RootSiblingParent>
   );
 }
