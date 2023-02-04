@@ -9,3 +9,21 @@ export const validateEmail = string => {
 export const validatePassword = string => {
   return /(?=.*[0-9a-zA-Z]).{6,}/.test(string);
 };
+
+export const validateInput = (state, fieldName) => {
+  let invalid;
+  switch (fieldName) {
+    case 'login':
+      invalid = !validateLogin(state[fieldName]);
+      break;
+
+    case 'email':
+      invalid = !validateEmail(state[fieldName]);
+      break;
+    case 'password':
+      invalid = !validatePassword(state[fieldName]);
+      break;
+  }
+
+  return invalid;
+};

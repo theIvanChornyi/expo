@@ -22,11 +22,7 @@ import { SubmitBtn } from '../../../Components/SubmitBtn/SubmitBtn.jsx';
 import { NavAuthLink } from '../../../Components/NavAuthLink/NavAuthLink.jsx';
 import { SecretPassBtn } from '../../../Components/SecretPassBtn/SecretPassBtn.jsx';
 import { signUpUser } from '../../../redux/auth/authThunks.js';
-import {
-  validateLogin,
-  validateEmail,
-  validatePassword,
-} from '../../../helpers/validation.js';
+import { validateInput } from '../../../helpers/validation.js';
 
 const initialState = {
   login: '',
@@ -41,7 +37,8 @@ export const RegistrationScreen = ({ navigation }) => {
   const [authData, setAuthData] = useState(initialState);
   const [isHide, setIsHide] = useState(true);
   const [activeField, setActiveField] = useState('');
-  const [invalidFields, setInvalidFields] = useState([]);
+  const [validFields] = useState(new Set());
+
   const [toast, setToast] = useState(null);
 
   const [isAdded, setIsAdded] = useState(false);
@@ -68,50 +65,28 @@ export const RegistrationScreen = ({ navigation }) => {
     setAuthData(initialState);
   };
 
-  const validateNicknameField = () => {
-    const isValid = validateLogin(authData.login);
+  const onChangeText = (value, fieldName) => {
+    const invalid = validateInput(authData, fieldName);
+    if (invalid) {
+      validFields.delete(fieldName);
+    } else {
+      validFields.add(fieldName);
+    }
+    setAuthData(p => ({ ...p, [fieldName]: value }));
+  };
+
+  const onBlurValidation = (fieldName, alarmtext) => {
     toast && Toast.hide(toast);
-    if (!isValid) {
+    const invalid = validateInput(authData, fieldName);
+    if (invalid) {
       setToast(
-        Toast.show('Nikcname can includes only letters!', {
+        Toast.show(alarmtext, {
           position: 0,
         })
       );
-      setInvalidFields(p => [...p, 'login']);
-    } else setInvalidFields(p => [...p.filter(name => name !== 'login')]);
-    setActiveField('');
-  };
+      validFields.delete(fieldName);
+    } else validFields.add(fieldName);
 
-  const validateEmailField = () => {
-    const isValid = validateEmail(authData.email);
-    toast && Toast.hide(toast);
-    if (!isValid) {
-      setToast(
-        Toast.show('It should valid email adress!', {
-          position: 0,
-        })
-      );
-      setInvalidFields(p => [...p, 'email']);
-    } else setInvalidFields(p => [...p.filter(name => name !== 'email')]);
-    setActiveField('');
-  };
-
-  const validatePasswordField = () => {
-    const isValid = validatePassword(authData.password);
-    toast && Toast.hide(toast);
-    if (!isValid) {
-      setToast(
-        Toast.show('It should valid password!', {
-          position: 0,
-        })
-      );
-      setInvalidFields(p => [...p, 'password']);
-    } else setInvalidFields(p => [...p.filter(name => name !== 'password')]);
-    setActiveField('');
-    setIsHide(true);
-  };
-
-  const focusOut = () => {
     setActiveField('');
   };
 
@@ -149,37 +124,33 @@ export const RegistrationScreen = ({ navigation }) => {
                 style={{
                   ...style.authInput,
                   borderColor: activeField === 'login' ? '#FF6C00' : '#E8E8E8',
-                  color: invalidFields.some(name => name === 'login')
-                    ? 'red'
-                    : '#212121',
+                  color: validFields.has('login') ? '#212121' : 'red',
                 }}
                 value={authData.login}
                 placeholder="Логин"
                 placeholderTextColor="#BDBDBD"
-                onChangeText={value =>
-                  setAuthData(p => ({ ...p, login: value }))
-                }
+                onChangeText={value => onChangeText(value, 'login')}
                 onFocus={() => setActiveField('login')}
-                onBlur={validateNicknameField}
+                onBlur={() =>
+                  onBlurValidation('login', 'It should valid login!')
+                }
               />
 
               <TextInput
                 style={{
                   ...style.authInput,
                   borderColor: activeField === 'email' ? '#FF6C00' : '#E8E8E8',
-                  color: invalidFields.some(name => name === 'email')
-                    ? 'red'
-                    : '#212121',
+                  color: validFields.has('email') ? '#212121' : 'red',
                 }}
                 value={authData.email}
                 keyboardType={'email-address'}
                 placeholder="Адрес электронной почты"
                 placeholderTextColor="#BDBDBD"
-                onChangeText={value =>
-                  setAuthData(p => ({ ...p, email: value }))
-                }
+                onChangeText={value => onChangeText(value, 'email')}
                 onFocus={() => setActiveField('email')}
-                onBlur={validateEmailField}
+                onBlur={() =>
+                  onBlurValidation('email', 'It should valid email!')
+                }
               />
 
               <View style={style.passwordWrapper}>
@@ -189,19 +160,17 @@ export const RegistrationScreen = ({ navigation }) => {
                     ...style.passwordInp,
                     borderColor:
                       activeField === 'password' ? '#FF6C00' : '#E8E8E8',
-                    color: invalidFields.some(name => name === 'password')
-                      ? 'red'
-                      : '#212121',
+                    color: validFields.has('password') ? '#212121' : 'red',
                   }}
                   value={authData.password}
                   secureTextEntry={isHide}
                   placeholder="Пароль"
                   placeholderTextColor="#BDBDBD"
-                  onChangeText={value =>
-                    setAuthData(p => ({ ...p, password: value }))
-                  }
+                  onChangeText={value => onChangeText(value, 'password')}
                   onFocus={() => setActiveField('password')}
-                  onBlur={validatePasswordField}
+                  onBlur={() =>
+                    onBlurValidation('password', 'It should valid password!')
+                  }
                 />
                 <SecretPassBtn
                   callback={() => setIsHide(p => !p)}
@@ -210,14 +179,10 @@ export const RegistrationScreen = ({ navigation }) => {
               </View>
 
               <SubmitBtn
+                disabled={validFields.size < 3}
                 title={'Зарегистрироваться'}
                 callback={signIn}
                 style={style.submitBtn}
-                disabled={
-                  !validateLogin(authData.login) &&
-                  !validateEmail(authData.email) &&
-                  !validatePassword(authData.password)
-                }
               />
               <NavAuthLink
                 title={'Уже есть аккаунт? Войти'}
