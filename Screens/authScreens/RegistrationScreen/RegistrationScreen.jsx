@@ -21,6 +21,7 @@ import { SubmitBtn } from '../../../Components/SubmitBtn/SubmitBtn.jsx';
 import { NavAuthLink } from '../../../Components/NavAuthLink/NavAuthLink.jsx';
 import { SecretPassBtn } from '../../../Components/SecretPassBtn/SecretPassBtn.jsx';
 import { signUpUser } from '../../../redux/auth/authThunks.js';
+import { validateLogin } from '../../../helpers/validation.js';
 
 const initialState = {
   login: '',
@@ -49,9 +50,18 @@ export const RegistrationScreen = ({ navigation }) => {
   };
 
   const login = () => {
-    dispatch(signUpUser());
+    dispatch(signUpUser(authData));
     hideKeyborard();
     setAuthData(initialState);
+  };
+
+  const validateNickname = () => {
+    const isValid = validateLogin(authData.login);
+    setActiveField('');
+  };
+
+  const focusOut = () => {
+    setActiveField('');
   };
 
   return (
@@ -96,7 +106,7 @@ export const RegistrationScreen = ({ navigation }) => {
                   setAuthData(p => ({ ...p, login: value }))
                 }
                 onFocus={() => setActiveField('login')}
-                onBlur={() => setActiveField('')}
+                onBlur={validateNickname}
               />
 
               <TextInput
@@ -112,7 +122,7 @@ export const RegistrationScreen = ({ navigation }) => {
                   setAuthData(p => ({ ...p, email: value }))
                 }
                 onFocus={() => setActiveField('email')}
-                onBlur={() => setActiveField('')}
+                onBlur={focusOut}
               />
 
               <View style={style.passwordWrapper}>
@@ -133,7 +143,7 @@ export const RegistrationScreen = ({ navigation }) => {
                   onFocus={() => setActiveField('password')}
                   onBlur={() => {
                     setIsHide(true);
-                    setActiveField('');
+                    focusOut();
                   }}
                 />
                 <SecretPassBtn
