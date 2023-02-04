@@ -37,7 +37,7 @@ export const RegistrationScreen = ({ navigation }) => {
   const [authData, setAuthData] = useState(initialState);
   const [isHide, setIsHide] = useState(true);
   const [activeField, setActiveField] = useState('');
-  const [validFields] = useState(new Set());
+  const [validFields] = useState(() => new Set());
 
   const [toast, setToast] = useState(null);
 
@@ -62,12 +62,12 @@ export const RegistrationScreen = ({ navigation }) => {
   const signIn = () => {
     dispatch(signUpUser(authData));
     hideAll();
+    validFields.clear();
     setAuthData(initialState);
   };
 
   const onChangeText = (value, fieldName) => {
-    const invalid = validateInput(authData, fieldName);
-    if (invalid) {
+    if (validateInput(authData, fieldName)) {
       validFields.delete(fieldName);
     } else {
       validFields.add(fieldName);
@@ -77,16 +77,16 @@ export const RegistrationScreen = ({ navigation }) => {
 
   const onBlurValidation = (fieldName, alarmtext) => {
     toast && Toast.hide(toast);
-    const invalid = validateInput(authData, fieldName);
-    if (invalid) {
+    if (validateInput(authData, fieldName)) {
       setToast(
         Toast.show(alarmtext, {
           position: 0,
         })
       );
       validFields.delete(fieldName);
-    } else validFields.add(fieldName);
-
+    } else {
+      validFields.add(fieldName);
+    }
     setActiveField('');
   };
 
@@ -166,7 +166,7 @@ export const RegistrationScreen = ({ navigation }) => {
                   secureTextEntry={isHide}
                   placeholder="Пароль"
                   placeholderTextColor="#BDBDBD"
-                  onChangeText={value => onChangeText(value, 'password')}
+                  onChangeText={value => onChangeText(value, 'email')}
                   onFocus={() => setActiveField('password')}
                   onBlur={() =>
                     onBlurValidation('password', 'It should valid password!')

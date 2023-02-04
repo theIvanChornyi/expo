@@ -32,7 +32,7 @@ export const LoginScreen = ({ navigation }) => {
   const [authData, setAuthData] = useState(initialState);
   const [isHide, setIsHide] = useState(true);
   const [activeField, setActiveField] = useState('');
-  const [validFields] = useState(new Set());
+  const [validFields] = useState(() => new Set());
   const [toast, setToast] = useState(null);
   console.log(validFields);
   const hideKeyborard = () => {
@@ -42,13 +42,12 @@ export const LoginScreen = ({ navigation }) => {
 
   const login = () => {
     hideKeyborard();
+    validFields.clear();
     setAuthData(initialState);
   };
 
   const onChangeText = (value, fieldName) => {
-    const invalid = validateInput(authData, fieldName);
-
-    if (invalid) {
+    if (validateInput(authData, fieldName)) {
       validFields.delete(fieldName);
     } else {
       validFields.add(fieldName);
@@ -58,8 +57,7 @@ export const LoginScreen = ({ navigation }) => {
 
   const onBlurValidation = (fieldName, alarmtext) => {
     toast && Toast.hide(toast);
-    const invalid = validateInput(authData, fieldName);
-    if (invalid) {
+    if (validateInput(authData, fieldName)) {
       setToast(
         Toast.show(alarmtext, {
           position: 0,
@@ -69,7 +67,6 @@ export const LoginScreen = ({ navigation }) => {
     } else {
       validFields.add(fieldName);
     }
-
     setActiveField('');
   };
 
