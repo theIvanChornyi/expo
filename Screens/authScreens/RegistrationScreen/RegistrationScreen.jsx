@@ -57,6 +57,7 @@ export const RegistrationScreen = ({ navigation }) => {
 
   const validateNickname = () => {
     const isValid = validateLogin(authData.login);
+
     setActiveField('');
   };
 
