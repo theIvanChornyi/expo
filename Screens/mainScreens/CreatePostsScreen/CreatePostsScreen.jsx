@@ -22,6 +22,10 @@ import { useKeyboardStatus } from '../../../Hooks/useKeyboardStatus/useKeyboardS
 import { style } from './CreatePostsScreen.styles';
 import { PostCamera } from '../../../Components/PostCamera/PostCamera';
 import { PostFilePicker } from '../../../Components/PostFilePicker/PostFilePicker';
+import { sendPhotoToStorage } from '../../../services/firebase/sendPhotoToStorage';
+import { writePostToStorage } from '../../../services/firebase/postsAPI';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../../redux/auth/authSelectors';
 
 const initialState = {
   photo: null,
@@ -34,11 +38,17 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [allowCam, requestAllowCam] = Camera.useCameraPermissions();
   const [allowFile, requestAllowFile] = MediaLibrary.usePermissions();
   const [allowGeo, requestAllowGeo] = Location.useForegroundPermissions();
-
+  const { uid, displayName, photoURL, email } = useSelector(selectUser);
   useEffect(() => {
     (async () => {
       try {
         await requestAllowCam();
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+        } else {
+          const location = await Location.getCurrentPositionAsync({});
+          setPostData(p => ({ ...p, location }));
+        }
       } catch (error) {
         console.log(e);
       }
@@ -99,18 +109,16 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   const createPost = async () => {
     if (!postData.photo) return;
-
-    try {
-      await requestAllowGeo();
-      if (allowGeo.granted) {
-        const location = await Location.getCurrentPositionAsync({});
-        setPostData(p => ({ ...p, location }));
-      }
-      navigation.navigate('defaultScreen', postData);
-      deletePostData();
-    } catch (e) {
-      console.log(e);
-    }
+    const photo = await sendPhotoToStorage(postData.photo.uri, 'PostsPhoto');
+    await writePostToStorage({
+      owner: { name: displayName, email, avatar: photoURL, id: uid },
+      photo,
+      title: postData.description,
+      location: postData.location,
+      place: postData.place,
+    });
+    navigation.navigate('post');
+    deletePostData();
   };
 
   const deletePostData = () => {

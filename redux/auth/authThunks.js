@@ -4,6 +4,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from 'firebase/auth';
 import { authFirebase } from '../../services/firebase/config';
 import { setUser } from './authSlice';
@@ -13,12 +14,13 @@ export const signUpUser = createAsyncThunk(
   async (data, thunkAPI) => {
     const auth = authFirebase;
     try {
-      const { user } = await createUserWithEmailAndPassword(
-        auth,
-        data?.email,
-        data?.password
-      );
-      return user;
+      await createUserWithEmailAndPassword(auth, data?.email, data?.password);
+      await updateProfile(auth.currentUser, {
+        displayName: data.login,
+        photoURL: 'https://example.com/jane-q-user/profile.jpg',
+      });
+
+      return auth.currentUser;
     } catch (e) {
       console.log(e);
     }

@@ -3,7 +3,6 @@ import { signInUser, signOut, signOutUser, signUpUser } from './authThunks';
 
 const initialState = {
   id: null,
-  name: null,
   user: null,
   isAuth: false,
 };

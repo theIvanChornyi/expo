@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FlatList, useWindowDimensions, View } from 'react-native';
 import { Post } from '../../../Components/Post/Post';
+import { getPostsFromStorage } from '../../../services/firebase/postsAPI';
 import { style } from './PostsDefaultScreen.styles';
 
-import data from '../../../assets/mockPosts';
-
 export const PostsDefaultScreen = () => {
-  const [posts, setPosts] = useState(data);
+  useEffect(() => {
+    getPostsFromStorage(setPosts);
+  }, []);
+
+  const [posts, setPosts] = useState([]);
 
   const { height, width } = useWindowDimensions();
 
