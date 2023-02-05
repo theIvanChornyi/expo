@@ -166,7 +166,7 @@ export const RegistrationScreen = ({ navigation }) => {
                   secureTextEntry={isHide}
                   placeholder="Пароль"
                   placeholderTextColor="#BDBDBD"
-                  onChangeText={value => onChangeText(value, 'email')}
+                  onChangeText={value => onChangeText(value, 'password')}
                   onFocus={() => setActiveField('password')}
                   onBlur={() =>
                     onBlurValidation('password', 'It should valid password!')

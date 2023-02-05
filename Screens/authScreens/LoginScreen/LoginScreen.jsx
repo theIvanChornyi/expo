@@ -19,6 +19,8 @@ import { style } from './LoginScreen.styles.js';
 import { NavAuthLink } from '../../../Components/NavAuthLink/NavAuthLink.jsx';
 import { SecretPassBtn } from '../../../Components/SecretPassBtn/SecretPassBtn.jsx';
 import { validateInput } from '../../../helpers/validation.js';
+import { useDispatch } from 'react-redux';
+import { signInUser } from '../../../redux/auth/authThunks.js';
 
 const initialState = {
   email: '',
@@ -34,13 +36,16 @@ export const LoginScreen = ({ navigation }) => {
   const [activeField, setActiveField] = useState('');
   const [validFields] = useState(() => new Set());
   const [toast, setToast] = useState(null);
-  console.log(validFields);
+
+  const dispatch = useDispatch();
+
   const hideKeyborard = () => {
     setIsHide(true);
     Keyboard.dismiss();
   };
 
   const login = () => {
+    dispatch(signInUser(authData));
     hideKeyborard();
     validFields.clear();
     setAuthData(initialState);
