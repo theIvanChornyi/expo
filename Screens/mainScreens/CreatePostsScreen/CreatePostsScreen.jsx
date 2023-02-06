@@ -48,7 +48,7 @@ export const CreatePostsScreen = ({ navigation }) => {
         }
         const location = await Location.getCurrentPositionAsync({});
         setLocation(location);
-      } catch (error) {
+      } catch (e) {
         console.log(e);
       }
     })();
