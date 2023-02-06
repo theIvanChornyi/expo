@@ -5,8 +5,17 @@ export const style = StyleSheet.create({
     backgroundColor: '#fff',
     flex: 1,
   },
-  list: { backgroundColor: '#fff', paddingHorizontal: 16 },
+  list: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+  },
 
+  listHeader: {
+    alignSelf: 'center',
+    marginVertical: 32,
+    minWidth: '100%',
+    minHeight: 240,
+  },
   inputWrapper: {
     marginTop: 10,
     marginHorizontal: 16,

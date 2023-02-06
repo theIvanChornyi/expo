@@ -9,6 +9,8 @@ export const style = StyleSheet.create({
   },
   picture: {
     flex: 1,
+    minWidth: '100%',
+    minHeight: 240,
   },
   title: {
     alignSelf: 'flex-start',

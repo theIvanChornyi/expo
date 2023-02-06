@@ -1,13 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
 } from 'firebase/auth';
 import { authFirebase } from '../../services/firebase/config';
-import { setUser } from './authSlice';
 
 export const signUpUser = createAsyncThunk(
   'auth/createNewUser',
@@ -38,22 +36,6 @@ export const signInUser = createAsyncThunk(
         data?.password
       );
       return user;
-    } catch (e) {
-      console.log(e);
-    }
-  }
-);
-
-export const refreshUser = createAsyncThunk(
-  'auth/refresh',
-  async (userId, thunkAPI) => {
-    try {
-      const auth = authFirebase;
-      onAuthStateChanged(auth, user => {
-        if (user) {
-          thunkAPI.dispatch(setUser(user));
-        }
-      });
     } catch (e) {
       console.log(e);
     }

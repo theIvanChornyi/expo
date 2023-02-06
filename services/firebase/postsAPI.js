@@ -1,7 +1,17 @@
-import { onValue, ref, set, update, push } from 'firebase/database';
+import {
+  doc,
+  setDoc,
+  collection,
+  onSnapshot,
+  query,
+  where,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from 'firebase/firestore';
 import { nanoid } from 'nanoid';
-import { transformFirebaseSnapshot } from '../../helpers/transformFirebaseSnapshot';
-import { database } from './config';
+
+import { db } from './config';
 
 export const writePostToStorage = async ({
   owner = {},
@@ -12,8 +22,9 @@ export const writePostToStorage = async ({
   location = {},
   place = '',
 }) => {
-  return await set(ref(database, 'Posts/' + title + nanoid()), {
+  return await setDoc(doc(db, 'posts', `${title + nanoid()}`), {
     owner,
+    ownerId: owner.id,
     photo,
     title,
     coments,
@@ -24,23 +35,41 @@ export const writePostToStorage = async ({
 };
 
 export const AddComentToStorage = async ({ id, coment }) => {
-  await push(ref(database, 'Posts/' + id + '/coments'), coment);
+  await updateDoc(doc(db, `posts/${id}/`), {
+    coment: arrayUnion(coment),
+  });
 };
 
 export const getPostsFromStorage = async callback => {
-  const starCountRef = ref(database, 'Posts/');
-  onValue(starCountRef, snapshot => {
-    callback(transformFirebaseSnapshot(snapshot));
+  onSnapshot(collection(db, 'posts'), docs => {
+    callback(docs.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+  });
+};
+
+export const getOwnFromStorage = async ({ id, callback }) => {
+  const q = query(collection(db, 'posts'), where('ownerId', '==', id));
+
+  onSnapshot(q, docs => {
+    callback(docs.docs.map(doc => ({ ...doc.data(), id: doc.id })));
   });
 };
 
 export const getComentsFromStorage = async ({ callback, id }) => {
-  const starCountRef = ref(database, 'Posts/' + id + '/coments');
-  onValue(starCountRef, snapshot => {
-    console.log(transformFirebaseSnapshot(snapshot));
+  const q = query(collection(db, `posts/${id}/coments`));
+  onSnapshot(q, docs => {
+    console.log(docs.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+    callback(docs.docs.map(doc => ({ ...doc.data(), id: doc.id })));
   });
 };
 
 export const likePostOnStorage = async id => {
-  await push(ref(database, 'Posts/' + id + '/likes'), id);
+  await updateDoc(doc(db, `posts/${id}/`), {
+    likes: arrayUnion(id),
+  });
+};
+
+export const unLikePostfromStorage = async id => {
+  await updateDoc(doc(db, `posts/${id}/`), {
+    likes: arrayRemove(id),
+  });
 };

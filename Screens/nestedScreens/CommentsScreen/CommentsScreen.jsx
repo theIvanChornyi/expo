@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { FlatList, Image, TextInput, View } from 'react-native';
-
+import { useEffect, useRef, useState } from 'react';
+import { FlatList, Image, Keyboard, Text, TextInput, View } from 'react-native';
+import { useKeyboardStatus } from '../../../Hooks/useKeyboardStatus/useKeyboardStatus';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -19,6 +19,8 @@ import { style } from './CommentsScreen.styles';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/auth/authSelectors';
 export const CommentsScreen = ({ route }) => {
+  const isShowKeyboard = useKeyboardStatus();
+
   const [coments, setComents] = useState([]);
   const { id, image } = route.params;
   const { uid, displayName, photoURL } = useSelector(selectUser);
@@ -26,7 +28,7 @@ export const CommentsScreen = ({ route }) => {
   const [text, setText] = useState('');
 
   useEffect(() => {
-    getComentsFromStorage({ id });
+    getComentsFromStorage({ id, callback: setComents });
   }, []);
 
   const sendComment = () => {
@@ -38,6 +40,8 @@ export const CommentsScreen = ({ route }) => {
         owner: { id: uid, name: displayName, avatar: photoURL },
       },
     });
+    setText('');
+    Keyboard.dismiss();
   };
 
   return (
@@ -70,19 +74,29 @@ export const CommentsScreen = ({ route }) => {
                   marginRight: isEven ? 16 : 0,
                 }}
               >
-                <Image source={item.avatar} />
+                <Image source={{ uri: item.owner.avatar }} />
               </View>
             </View>
           );
         }}
         ListHeaderComponent={() => (
-          <Image
-            source={{ uri: image }}
-            style={{ alignSelf: 'center', marginVertical: 32 }}
-          />
+          <Image source={{ uri: image }} style={style.listHeader} />
         )}
         ListFooterComponent={() => (
           <View style={{ height: 21, backgroundColor: '#fff' }} />
+        )}
+        ListEmptyComponent={() => (
+          <View
+            style={{
+              height: '100%',
+              flex: 1,
+              backgroundColor: '#fff',
+            }}
+          >
+            <Text style={{ textAlign: 'center' }}>
+              Оставьте свой коментарий!
+            </Text>
+          </View>
         )}
         ItemSeparatorComponent={() => (
           <View style={{ height: 24, backgroundColor: '#fff' }} />
@@ -91,7 +105,7 @@ export const CommentsScreen = ({ route }) => {
       <View
         style={{
           ...style.inputWrapper,
-          marginBottom: 16,
+          marginBottom: isShowKeyboard ? 100 : 16,
         }}
       >
         <TextInput
@@ -100,8 +114,6 @@ export const CommentsScreen = ({ route }) => {
           placeholder="Комментировать..."
           placeholderTextColor="#BDBDBD"
           onChangeText={v => setText(p => ({ ...p, text: v }))}
-          // onFocus={() => setActiveField('email')}
-          // onBlur={() => setActiveField('')}
         />
         <TouchableOpacity style={style.sendBtn} onPress={sendComment}>
           <SendArrow fill={'#fff'} />

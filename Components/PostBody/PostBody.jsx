@@ -5,7 +5,7 @@ import Coment from '../../img/svg/messageCircle.svg';
 import Location from '../../img/svg/mapPin.svg';
 import { PostBtn } from '../PostBtn/PostBtn';
 import { NavigationContext } from '@react-navigation/native';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectUserId } from '../../redux/auth/authSelectors';
 import { likePostOnStorage } from '../../services/firebase/postsAPI';
@@ -13,19 +13,28 @@ import { likePostOnStorage } from '../../services/firebase/postsAPI';
 export const PostBody = ({
   image,
   title,
-  coments,
-  likes,
+  coments = {},
+  likes = {},
   place,
   location,
   id,
 }) => {
   const navigation = useContext(NavigationContext);
   const userId = useSelector(selectUserId);
+  [comentsAmount, setComentsAmount] = useState(0);
+  [likesAmount, setLikesAmount] = useState(0);
+  useEffect(() => {
+    if (likes) {
+      setLikesAmount(Object.entries(likes).length);
+    }
+    if (coments) {
+      setComentsAmount(Object.entries(coments).length);
+    }
+  }, [likes, coments]);
 
   const like = () => {
     likePostOnStorage(userId);
   };
-
   return (
     <View style={style.container}>
       <Image source={{ uri: image }} style={{ ...style.picture }} />
@@ -37,15 +46,15 @@ export const PostBody = ({
           <PostBtn
             callback={() => navigation.navigate('comments', { id, image })}
             Icon={Coment}
-            text={coments?.length ?? '0'}
+            text={comentsAmount.toString()}
             style={{ marginRight: 24 }}
           />
-          <PostBtn callback={like} Icon={Like} text={likes?.length ?? '0'} />
+          <PostBtn callback={like} Icon={Like} text={likesAmount.toString()} />
         </View>
 
         <TouchableOpacity
           style={style.location}
-          onPress={() => navigation.navigate('map', location)}
+          onPress={() => navigation.navigate('map', { location })}
         >
           <Location style={style.locationImage} />
           <Text style={style.locationText}>{place}</Text>

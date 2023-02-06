@@ -2,10 +2,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from '../redux/auth/authSelectors';
-import { refreshUser } from '../redux/auth/authThunks';
 import { LoginScreen } from '../Screens/authScreens/LoginScreen/LoginScreen';
 import { RegistrationScreen } from '../Screens/authScreens/RegistrationScreen/RegistrationScreen';
 import { Home } from '../Screens/mainScreens/Home';
+import { refreshUser } from '../services/firebase/authAPI';
 
 const AuthStack = createNativeStackNavigator();
 
@@ -14,7 +14,7 @@ export const Router = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(refreshUser(isAuth));
+    refreshUser(dispatch);
   }, []);
 
   return isAuth ? (

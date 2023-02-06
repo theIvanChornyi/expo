@@ -29,7 +29,6 @@ import { selectUser } from '../../../redux/auth/authSelectors';
 
 const initialState = {
   photo: null,
-  location: null,
   description: '',
   place: '',
 };
@@ -39,16 +38,16 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [allowFile, requestAllowFile] = MediaLibrary.usePermissions();
   const [allowGeo, requestAllowGeo] = Location.useForegroundPermissions();
   const { uid, displayName, photoURL, email } = useSelector(selectUser);
+  const [location, setLocation] = useState(null);
   useEffect(() => {
     (async () => {
       try {
         await requestAllowCam();
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
-        } else {
-          const location = await Location.getCurrentPositionAsync({});
-          setPostData(p => ({ ...p, location }));
         }
+        const location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
       } catch (error) {
         console.log(e);
       }
@@ -110,11 +109,12 @@ export const CreatePostsScreen = ({ navigation }) => {
   const createPost = async () => {
     if (!postData.photo) return;
     const photo = await sendPhotoToStorage(postData.photo.uri, 'PostsPhoto');
+
     await writePostToStorage({
       owner: { name: displayName, email, avatar: photoURL, id: uid },
       photo,
       title: postData.description,
-      location: postData.location,
+      location: location.coords,
       place: postData.place,
     });
     navigation.navigate('post');
@@ -176,7 +176,7 @@ export const CreatePostsScreen = ({ navigation }) => {
           </View>
 
           <SubmitBtn
-            disabled={!postData.photo}
+            disabled={!postData.photo & !location}
             title={'Опубликовать'}
             callback={createPost}
             style={style.submitBtn}

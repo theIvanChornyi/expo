@@ -8,6 +8,7 @@ export const style = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     marginTop: 103,
+    paddingBottom: 32,
   },
   avatar: {
     position: 'absolute',
