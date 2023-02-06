@@ -5,7 +5,7 @@ export const PostOwner = ({ name, image, email }) => {
   return (
     <View style={style.postContainer}>
       <View>
-        <Image source={image} style={style.postImage} />
+        <Image source={{ uri: image }} style={style.postImage} />
       </View>
 
       <View style={style.postText}>

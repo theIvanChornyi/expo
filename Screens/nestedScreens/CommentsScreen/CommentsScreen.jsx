@@ -1,18 +1,44 @@
+import { useEffect, useState } from 'react';
+import { FlatList, Image, TextInput, View } from 'react-native';
+
 import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import { FlatList, Image, TextInput, View } from 'react-native';
-import data from '../../../assets/mockComments';
 import { Coment } from '../../../Components/Coment/Coment';
+import {
+  AddComentToStorage,
+  getComentsFromStorage,
+} from '../../../services/firebase/postsAPI';
 
 import SendArrow from '../../../img/svg/Vector.svg';
 
 import { style } from './CommentsScreen.styles';
-export const CommentsScreen = () => {
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../../redux/auth/authSelectors';
+export const CommentsScreen = ({ route }) => {
+  const [coments, setComents] = useState([]);
+  const { id, image } = route.params;
+  const { uid, displayName, photoURL } = useSelector(selectUser);
   const { height, width } = useWindowDimensions();
+  const [text, setText] = useState('');
+
+  useEffect(() => {
+    getComentsFromStorage({ id });
+  }, []);
+
+  const sendComment = () => {
+    AddComentToStorage({
+      id,
+      coment: {
+        text,
+        data: Date.now(),
+        owner: { id: uid, name: displayName, avatar: photoURL },
+      },
+    });
+  };
 
   return (
     <KeyboardAvoidingView
@@ -24,7 +50,7 @@ export const CommentsScreen = () => {
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
     >
       <FlatList
-        data={data}
+        data={coments}
         style={style.list}
         keyExtractor={item => item.id}
         renderItem={({ item, index }) => {
@@ -51,7 +77,7 @@ export const CommentsScreen = () => {
         }}
         ListHeaderComponent={() => (
           <Image
-            source={require('../../../img/mock/post2.png')}
+            source={{ uri: image }}
             style={{ alignSelf: 'center', marginVertical: 32 }}
           />
         )}
@@ -70,14 +96,14 @@ export const CommentsScreen = () => {
       >
         <TextInput
           style={style.input}
-          // value={authData.email}
+          value={text}
           placeholder="Комментировать..."
           placeholderTextColor="#BDBDBD"
-          // onChangeText={value => setAuthData(p => ({ ...p, email: value }))}
+          onChangeText={v => setText(p => ({ ...p, text: v }))}
           // onFocus={() => setActiveField('email')}
           // onBlur={() => setActiveField('')}
         />
-        <TouchableOpacity style={style.sendBtn}>
+        <TouchableOpacity style={style.sendBtn} onPress={sendComment}>
           <SendArrow fill={'#fff'} />
         </TouchableOpacity>
       </View>

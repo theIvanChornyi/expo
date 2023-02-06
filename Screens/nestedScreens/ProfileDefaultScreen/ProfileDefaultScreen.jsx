@@ -8,12 +8,11 @@ import {
 
 import { style } from './ProfileDefaultScreen.styles';
 
-import data from '../../../assets/mockPosts';
 import { PostBody } from '../../../Components/PostBody/PostBody';
 import { PostHeader } from '../../../Components/PostHeader/PostHeader';
 
 export const ProfileDefaultScreen = ({ navigation }) => {
-  const [posts, setPosts] = useState(data);
+  const [posts, setPosts] = useState([]);
   const { height, width } = useWindowDimensions();
 
   const [isAdded, setIsAdded] = useState(false);
@@ -44,6 +43,7 @@ export const ProfileDefaultScreen = ({ navigation }) => {
             coments={item.coments}
             likes={item.likes}
             location={item.location}
+            id={item.id}
           />
         )}
         keyExtractor={item => item.id}
