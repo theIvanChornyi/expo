@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import {
   Image,
-  Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -11,6 +10,7 @@ import {
 import { DeleteBtn } from '../../../Components/DeleteBtn/DeleteBtn';
 import { SubmitBtn } from '../../../Components/SubmitBtn/SubmitBtn';
 import GoBack from '../../../img/svg/arrowLeft.svg';
+import Shot from '../../../img/svg/camera.svg';
 
 import { style } from './CameraModal.styles';
 
@@ -70,13 +70,20 @@ export const CameraModal = ({ navigation, route }) => {
               position: 'absolute',
               top: 0,
               flexDirection: 'row',
+              width,
+              paddingHorizontal: 16,
+              paddingTop: 16,
+              justifyContent: 'space-between',
             }}
           >
-            <TouchableOpacity onPress={toggleCameraType}>
-              <Text style={{ color: 'red' }}>change camera</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={createPhoto}>
-              <Text style={{ color: 'red' }}>take picture</Text>
+            <TouchableOpacity
+              onPress={toggleCameraType}
+              style={{ ...style.controlBtn }}
+            >
+              <Image
+                source={require('../../../img/switchCamera.png')}
+                style={{ width: 25, height: 25 }}
+              />
             </TouchableOpacity>
           </View>
         </Camera>
@@ -87,18 +94,50 @@ export const CameraModal = ({ navigation, route }) => {
             source={{ uri: photo?.uri }}
             resizeMode="contain"
           />
-          <View style={{ position: 'absolute', top: 0, flexDirection: 'row' }}>
-            <DeleteBtn callBack={deletePhoto} />
-            <SubmitBtn callback={console.log} title="Изменить фото" />
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              flexDirection: 'row',
+              width,
+              paddingHorizontal: 16,
+              paddingTop: 16,
+              justifyContent: 'space-between',
+            }}
+          >
+            <DeleteBtn callBack={deletePhoto} style={{ ...style.controlBtn }} />
+            <SubmitBtn callback={console.log} title="Подтвердить" />
           </View>
         </View>
       )}
-      <View style={{ position: 'absolute', bottom: 0, flexDirection: 'row' }}>
-        <TouchableOpacity onPress={() => navigation.goBack(null)}>
-          <GoBack stroke="#212121CC" />
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          flexDirection: 'row',
+          width,
+          paddingHorizontal: 16,
+          paddingBottom: 16,
+          justifyContent: 'space-between',
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => navigation.goBack(null)}
+          style={{ ...style.controlBtn }}
+        >
+          <GoBack stroke="#000" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('FilesModal')}>
-          <Text style={{ color: 'red' }}>Select from gallery</Text>
+        <TouchableOpacity onPress={createPhoto} style={{ ...style.controlBtn }}>
+          <Shot />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('FilesModal')}
+          style={{ ...style.controlBtn }}
+        >
+          <Image
+            source={require('../../../img/selectFile.png')}
+            style={{ width: 25, height: 25 }}
+          />
         </TouchableOpacity>
       </View>
     </View>
