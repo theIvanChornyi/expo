@@ -8,32 +8,34 @@ import { NavigationContext } from '@react-navigation/native';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectUserId } from '../../redux/auth/authSelectors';
-import { likePostOnStorage } from '../../services/firebase/postsAPI';
+import {
+  likePostOnStorage,
+  unLikePostfromStorage,
+} from '../../services/firebase/postsAPI';
 
 export const PostBody = ({
   image,
   title,
-  coments = {},
-  likes = {},
+  coments,
+  likes,
   place,
   location,
   id,
 }) => {
   const navigation = useContext(NavigationContext);
   const userId = useSelector(selectUserId);
-  [comentsAmount, setComentsAmount] = useState(0);
-  [likesAmount, setLikesAmount] = useState(0);
-  useEffect(() => {
-    if (likes) {
-      setLikesAmount(Object.entries(likes).length);
-    }
-    if (coments) {
-      setComentsAmount(Object.entries(coments).length);
-    }
-  }, [likes, coments]);
+  const [isLike, setIsLike] = useState(() =>
+    likes.some(like => like === userId)
+  );
 
   const like = () => {
-    likePostOnStorage(userId);
+    if (isLike) {
+      unLikePostfromStorage({ id, userId });
+      setIsLike(false);
+    } else {
+      likePostOnStorage({ id, userId });
+      setIsLike(true);
+    }
   };
   return (
     <View style={style.container}>
@@ -46,10 +48,15 @@ export const PostBody = ({
           <PostBtn
             callback={() => navigation.navigate('comments', { id, image })}
             Icon={Coment}
-            text={comentsAmount.toString()}
+            text={coments.length.toString()}
             style={{ marginRight: 24 }}
           />
-          <PostBtn callback={like} Icon={Like} text={likesAmount.toString()} />
+          <PostBtn
+            isLike={isLike}
+            callback={like}
+            Icon={Like}
+            text={likes.length.toString()}
+          />
         </View>
 
         <TouchableOpacity

@@ -36,13 +36,13 @@ export const writePostToStorage = async ({
 
 export const AddComentToStorage = async ({ id, coment }) => {
   await updateDoc(doc(db, `posts/${id}/`), {
-    coment: arrayUnion(coment),
+    coments: arrayUnion({ ...coment, id: nanoid() }),
   });
 };
 
 export const getPostsFromStorage = async callback => {
   onSnapshot(collection(db, 'posts'), docs => {
-    callback(docs.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+    callback(docs.docs.map(doc => ({ ...doc?.data(), id: doc.id })));
   });
 };
 
@@ -50,26 +50,24 @@ export const getOwnFromStorage = async ({ id, callback }) => {
   const q = query(collection(db, 'posts'), where('ownerId', '==', id));
 
   onSnapshot(q, docs => {
-    callback(docs.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+    callback(docs.docs.map(doc => ({ ...doc?.data(), id: doc.id })));
   });
 };
 
 export const getComentsFromStorage = async ({ callback, id }) => {
-  const q = query(collection(db, `posts/${id}/coments`));
-  onSnapshot(q, docs => {
-    console.log(docs.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-    callback(docs.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+  onSnapshot(doc(db, 'posts', id), doc => {
+    callback(doc?.data().coments);
   });
 };
 
-export const likePostOnStorage = async id => {
+export const likePostOnStorage = async ({ id, userId }) => {
   await updateDoc(doc(db, `posts/${id}/`), {
-    likes: arrayUnion(id),
+    likes: arrayUnion(userId),
   });
 };
 
-export const unLikePostfromStorage = async id => {
+export const unLikePostfromStorage = async ({ id, userId }) => {
   await updateDoc(doc(db, `posts/${id}/`), {
-    likes: arrayRemove(id),
+    likes: arrayRemove(userId),
   });
 };
