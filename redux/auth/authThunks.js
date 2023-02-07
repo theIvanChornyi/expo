@@ -11,17 +11,13 @@ export const signUpUser = createAsyncThunk(
   'auth/createNewUser',
   async (data, thunkAPI) => {
     const auth = authFirebase;
-    try {
-      await createUserWithEmailAndPassword(auth, data?.email, data?.password);
-      await updateProfile(auth.currentUser, {
-        displayName: data.login,
-        photoURL: 'https://example.com/jane-q-user/profile.jpg',
-      });
+    await createUserWithEmailAndPassword(auth, data?.email, data?.password);
+    await updateProfile(auth.currentUser, {
+      displayName: data.login,
+      photoURL: '',
+    });
 
-      return auth.currentUser;
-    } catch (e) {
-      console.log(e);
-    }
+    return auth.currentUser;
   }
 );
 

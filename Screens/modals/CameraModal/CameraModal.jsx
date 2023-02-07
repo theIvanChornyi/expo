@@ -79,7 +79,11 @@ export const CameraModal = ({ navigation, route }) => {
         </Camera>
       ) : (
         <View style={{ flex: 1 }}>
-          <Image style={{ flex: 1 }} source={{ uri: photo?.uri }} />
+          <Image
+            style={{ flex: 1 }}
+            source={{ uri: photo?.uri }}
+            resizeMode="contain"
+          />
           <View style={{ position: 'absolute', top: 0, flexDirection: 'row' }}>
             <TouchableOpacity onPress={deletePhoto}>
               <Text style={{ color: 'red' }}>delte photo</Text>

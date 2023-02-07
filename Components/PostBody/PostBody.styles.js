@@ -11,6 +11,7 @@ export const style = StyleSheet.create({
     flex: 1,
     minWidth: '100%',
     minHeight: 240,
+    borderRadius: 8,
   },
   title: {
     alignSelf: 'flex-start',

@@ -39,7 +39,7 @@ export const PostBody = ({
   };
   return (
     <View style={style.container}>
-      <Image source={{ uri: image }} style={{ ...style.picture }} />
+      <Image source={{ uri: image }} style={style.picture} />
 
       <Text style={style.title}>{title}</Text>
 

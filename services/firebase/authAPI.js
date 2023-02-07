@@ -1,4 +1,10 @@
-import { onAuthStateChanged } from 'firebase/auth';
+import {
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from 'firebase/auth';
 import { setUser } from '../../redux/auth/authSlice';
 import { authFirebase } from './config';
 

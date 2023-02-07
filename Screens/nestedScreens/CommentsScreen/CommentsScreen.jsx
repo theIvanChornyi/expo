@@ -58,23 +58,29 @@ export const CommentsScreen = ({ route }) => {
         style={style.list}
         keyExtractor={item => item.id}
         renderItem={({ item, index }) => {
-          const isEven = index % 2 === 0;
+          const itsMe = uid !== item.owner.id;
           return (
-            <View style={{ flexDirection: !isEven ? 'row' : 'row-reverse' }}>
+            <View style={{ flexDirection: !itsMe ? 'row' : 'row-reverse' }}>
               <Coment
                 {...item}
                 style={{
-                  borderTopEndRadius: isEven ? 6 : 0,
-                  borderTopStartRadius: !isEven ? 6 : 0,
+                  borderTopEndRadius: itsMe ? 6 : 0,
+                  borderTopStartRadius: !itsMe ? 6 : 0,
                 }}
               />
               <View
                 style={{
-                  marginLeft: !isEven ? 16 : 0,
-                  marginRight: isEven ? 16 : 0,
+                  marginLeft: !itsMe ? 16 : 0,
+                  marginRight: itsMe ? 16 : 0,
                 }}
               >
                 <Image
+                  style={{
+                    height: 28,
+                    width: 28,
+                    overflow: 'hidden',
+                    borderRadius: 100,
+                  }}
                   source={
                     item?.owner?.avatar
                       ? { uri: item.owner.avatar }
