@@ -5,7 +5,7 @@ import GoBack from '../../img/svg/arrowLeft.svg';
 
 import { style } from './GoBackBtn.styles';
 
-export const GoBackBtn = () => {
+export const GoBackBtn = (stroke = '#212121CC') => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity

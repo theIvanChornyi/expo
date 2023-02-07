@@ -8,6 +8,9 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import { DeleteBtn } from '../../../Components/DeleteBtn/DeleteBtn';
+import { SubmitBtn } from '../../../Components/SubmitBtn/SubmitBtn';
+import GoBack from '../../../img/svg/arrowLeft.svg';
 
 import { style } from './CameraModal.styles';
 
@@ -85,18 +88,14 @@ export const CameraModal = ({ navigation, route }) => {
             resizeMode="contain"
           />
           <View style={{ position: 'absolute', top: 0, flexDirection: 'row' }}>
-            <TouchableOpacity onPress={deletePhoto}>
-              <Text style={{ color: 'red' }}>delte photo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={deletePhoto}>
-              <Text style={{ color: 'red' }}>send</Text>
-            </TouchableOpacity>
+            <DeleteBtn callBack={deletePhoto} />
+            <SubmitBtn callback={console.log} title="Изменить фото" />
           </View>
         </View>
       )}
       <View style={{ position: 'absolute', bottom: 0, flexDirection: 'row' }}>
         <TouchableOpacity onPress={() => navigation.goBack(null)}>
-          <Text style={{ color: 'red' }}>Go back</Text>
+          <GoBack stroke="#212121CC" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('FilesModal')}>
           <Text style={{ color: 'red' }}>Select from gallery</Text>
