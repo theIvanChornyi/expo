@@ -74,7 +74,13 @@ export const CommentsScreen = ({ route }) => {
                   marginRight: isEven ? 16 : 0,
                 }}
               >
-                <Image source={{ uri: item.owner.avatar }} />
+                <Image
+                  source={
+                    item?.owner?.avatar
+                      ? { uri: item.owner.avatar }
+                      : require('../../../img/emptyUser.jpg')
+                  }
+                />
               </View>
             </View>
           );

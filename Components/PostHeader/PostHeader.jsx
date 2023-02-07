@@ -10,7 +10,17 @@ export const PostHeader = ({ isAdded, changeAvatar, navigation }) => {
   return (
     <View style={style.profileField}>
       <View style={style?.avatar}>
-        <Image source={require('../../img/mock/Profile.png')} />
+        <Image
+          source={
+            photoURL ? { uri: photoURL } : require('../../img/emptyUser.jpg')
+          }
+          style={{
+            width: 120,
+            height: 120,
+            overflow: 'hidden',
+            borderRadius: 16,
+          }}
+        />
         <AddPhotoBtn
           style={{ bottom: 14, right: -25 / 2 }}
           {...{ isAdded, changeAvatar }}

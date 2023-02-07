@@ -5,7 +5,16 @@ export const PostOwner = ({ name, image, email }) => {
   return (
     <View style={style.postContainer}>
       <View>
-        <Image source={{ uri: image }} style={style.postImage} />
+        <Image
+          style={{
+            ...style.postImage,
+            width: 60,
+            height: 60,
+            overflow: 'hidden',
+            borderRadius: 16,
+          }}
+          source={image ? { uri: image } : require('../../img/emptyUser.jpg')}
+        />
       </View>
 
       <View style={style.postText}>
