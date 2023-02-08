@@ -8,6 +8,7 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  orderBy,
 } from 'firebase/firestore';
 import 'react-native-get-random-values';
 import uuid from 'react-native-uuid';
@@ -33,6 +34,7 @@ export const writePostToStorage = async ({
     likes,
     location,
     place,
+    timeStamp: Date.now(),
   });
 };
 
@@ -44,7 +46,8 @@ export const AddComentToStorage = async ({ id, coment }) => {
 };
 
 export const getPostsFromStorage = async callback => {
-  onSnapshot(collection(db, 'posts'), docs => {
+  const q = query(collection(db, 'posts'), orderBy('timeStamp', 'desc'));
+  onSnapshot(q, docs => {
     callback(docs.docs.map(doc => ({ ...doc?.data(), id: doc.id })));
   });
 };
@@ -53,7 +56,11 @@ export const getOwnFromStorage = async ({ id, callback }) => {
   const q = query(collection(db, 'posts'), where('ownerId', '==', id));
 
   onSnapshot(q, docs => {
-    callback(docs.docs.map(doc => ({ ...doc?.data(), id: doc.id })));
+    callback(
+      docs.docs
+        .map(doc => ({ ...doc?.data(), id: doc.id }))
+        .sort((a, b) => a.timeStamp > b.timeStamp)
+    );
   });
 };
 
