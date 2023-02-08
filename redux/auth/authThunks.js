@@ -46,3 +46,33 @@ export const signOutUser = createAsyncThunk('auth/logOut', async () => {
     console.log(e);
   }
 });
+
+export const changeUserAvatar = createAsyncThunk(
+  'auth/changeUserAvatar',
+  async (photoURL, thunkAPI) => {
+    const auth = authFirebase;
+    await updateProfile(auth.currentUser, {
+      photoURL,
+    });
+
+    const {
+      auth: { currentUser },
+    } = auth.currentUser;
+    return currentUser;
+  }
+);
+
+export const deleteUserAvatar = createAsyncThunk(
+  'auth/deleteUserAvatar',
+  async () => {
+    const auth = authFirebase;
+    await updateProfile(auth.currentUser, {
+      photoURL: '',
+    });
+
+    const {
+      auth: { currentUser },
+    } = auth.currentUser;
+    return currentUser;
+  }
+);

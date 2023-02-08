@@ -18,18 +18,13 @@ import { selectUser } from '../../../redux/auth/authSelectors';
 
 export const ProfileDefaultScreen = ({ navigation }) => {
   const { uid: id } = useSelector(selectUser);
+
   const [posts, setPosts] = useState([]);
   const { height, width } = useWindowDimensions();
 
-  const [isAdded, setIsAdded] = useState(false);
   useEffect(() => {
     getOwnFromStorage({ id, callback: setPosts });
   }, []);
-
-  const changeAvatar = () => {
-    navigation.navigate('ProfileCamera');
-    setIsAdded(p => !p);
-  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -44,9 +39,7 @@ export const ProfileDefaultScreen = ({ navigation }) => {
         <FlatList
           style={{ flex: 1, marginTop: 32, minHeight: '100%' }}
           data={posts}
-          ListHeaderComponent={
-            <PostHeader {...{ navigation, isAdded, changeAvatar }} />
-          }
+          ListHeaderComponent={<PostHeader {...{ navigation }} />}
           renderItem={({ item }) => (
             <PostBody
               image={item.photo}

@@ -9,7 +9,8 @@ import {
   arrayUnion,
   arrayRemove,
 } from 'firebase/firestore';
-import { nanoid } from 'nanoid';
+import 'react-native-get-random-values';
+import uuid from 'react-native-uuid';
 
 import { db } from './config';
 
@@ -22,7 +23,8 @@ export const writePostToStorage = async ({
   location = {},
   place = '',
 }) => {
-  return await setDoc(doc(db, 'posts', `${title + nanoid()}`), {
+  const id = uuid.v4();
+  return await setDoc(doc(db, 'posts', `${title + id}`), {
     owner,
     ownerId: owner.id,
     photo,
@@ -35,8 +37,9 @@ export const writePostToStorage = async ({
 };
 
 export const AddComentToStorage = async ({ id, coment }) => {
+  const comentId = uuid.v4();
   await updateDoc(doc(db, `posts/${id}/`), {
-    coments: arrayUnion({ ...coment, id: nanoid() }),
+    coments: arrayUnion({ ...coment, id: comentId }),
   });
 };
 

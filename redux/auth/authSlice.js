@@ -1,10 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { signInUser, signOutUser, signUpUser } from './authThunks';
+import {
+  changeUserAvatar,
+  deleteUserAvatar,
+  signInUser,
+  signOutUser,
+  signUpUser,
+} from './authThunks';
 
 const initialState = {
   id: null,
   user: null,
   isAuth: false,
+  state: 'pending',
 };
 
 export const authSlice = createSlice({
@@ -39,6 +46,18 @@ export const authSlice = createSlice({
     builder.addCase(signOutUser.pending, (state, action) => {});
     builder.addCase(signOutUser.fulfilled, () => ({ ...initialState }));
     builder.addCase(signOutUser.rejected, (state, action) => {});
+
+    builder.addCase(changeUserAvatar.pending, (state, action) => {});
+    builder.addCase(changeUserAvatar.fulfilled, (state, action) => ({
+      ...state,
+    }));
+    builder.addCase(changeUserAvatar.rejected, (state, action) => {});
+
+    builder.addCase(deleteUserAvatar.pending, (state, action) => {});
+    builder.addCase(deleteUserAvatar.fulfilled, (state, action) => ({
+      ...state,
+    }));
+    builder.addCase(deleteUserAvatar.rejected, (state, action) => {});
   },
 });
 

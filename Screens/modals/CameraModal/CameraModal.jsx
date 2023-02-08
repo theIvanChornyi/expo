@@ -1,16 +1,18 @@
 import { Camera, CameraType } from 'expo-camera';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Image,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { DeleteBtn } from '../../../Components/DeleteBtn/DeleteBtn';
 import { SubmitBtn } from '../../../Components/SubmitBtn/SubmitBtn';
 import GoBack from '../../../img/svg/arrowLeft.svg';
 import Shot from '../../../img/svg/camera.svg';
+import { changeUserAvatar } from '../../../redux/auth/authThunks';
+import { sendPhotoToStorage } from '../../../services/firebase/sendPhotoToStorage';
 
 import { style } from './CameraModal.styles';
 
@@ -23,6 +25,7 @@ export const CameraModal = ({ navigation, route }) => {
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
   const item = route?.params?.item;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (item) {
@@ -51,9 +54,15 @@ export const CameraModal = ({ navigation, route }) => {
     setIsUpload(false);
   };
 
-  function toggleCameraType() {
+  const toggleCameraType = () => {
     setType(p => (p === CameraType.back ? CameraType.front : CameraType.back));
-  }
+  };
+
+  const changeAvatar = async () => {
+    const data = await sendPhotoToStorage(photo.uri, 'AvatarPhoto');
+    dispatch(changeUserAvatar(data));
+    navigation.goBack();
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -106,7 +115,7 @@ export const CameraModal = ({ navigation, route }) => {
             }}
           >
             <DeleteBtn callBack={deletePhoto} style={{ ...style.controlBtn }} />
-            <SubmitBtn callback={console.log} title="Подтвердить" />
+            <SubmitBtn callback={changeAvatar} title="Подтвердить" />
           </View>
         </View>
       )}

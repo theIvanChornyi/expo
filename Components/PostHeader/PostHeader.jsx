@@ -1,12 +1,22 @@
 import { Image, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../redux/auth/authSelectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser, avatarUser } from '../../redux/auth/authSelectors';
 import { AddPhotoBtn } from '../AddPhotoBtn/AddPhotoBtn';
 import { LogOutBtn } from '../LogOutBtn/LogOutBtn';
 import { style } from './PostHeader.styles';
+import { deleteUserAvatar } from '../../redux/auth/authThunks';
 
-export const PostHeader = ({ isAdded, changeAvatar, navigation }) => {
-  const { displayName, photoURL } = useSelector(selectUser);
+export const PostHeader = ({ navigation }) => {
+  const { displayName } = useSelector(selectUser);
+  const photoURL = useSelector(avatarUser);
+  const dispatch = useDispatch();
+  const changeAvatar = async () => {
+    navigation.navigate('ProfileCamera');
+  };
+
+  const deletePhoto = async () => {
+    dispatch(deleteUserAvatar());
+  };
   return (
     <View style={style.profileField}>
       <View style={style?.avatar}>
@@ -23,7 +33,7 @@ export const PostHeader = ({ isAdded, changeAvatar, navigation }) => {
         />
         <AddPhotoBtn
           style={{ bottom: 14, right: -25 / 2 }}
-          {...{ isAdded, changeAvatar }}
+          {...{ photoURL, changeAvatar, deletePhoto }}
         />
       </View>
       <LogOutBtn
