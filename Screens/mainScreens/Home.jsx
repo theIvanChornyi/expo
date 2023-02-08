@@ -9,6 +9,7 @@ import { GoBackBtn } from '../../Components/GoBackBtn/GoBackBtn';
 import { ProfileTab } from '../../Components/ProfileTab/ProfileTab';
 import { PostsTab } from '../../Components/PostsTab/PostsTab';
 import { useWindowDimensions } from 'react-native';
+import { FilesModal } from '../modals/FilesModal/FilesModal';
 
 const MainTabs = createBottomTabNavigator();
 
@@ -31,35 +32,45 @@ export const Home = () => {
         tabBarActiveTintColor: '#000',
       }}
     >
-      <MainTabs.Screen
-        name="post"
-        component={PostsScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: PostsTab,
-        }}
-      />
-      <MainTabs.Screen
-        name="createPost"
-        component={CreatePostsScreen}
-        options={{
-          headerShown: height > width,
-          title: 'Создать публикацию',
-          headerTitleAlign: 'center',
-          headerTitleStyle: { fontFamily: 'Roboto-Bold', fontSize: 17 },
-          tabBarStyle: { display: 'none' },
-          headerLeft: GoBackBtn,
-          tabBarIcon: CreatePostTab,
-        }}
-      />
-      <MainTabs.Screen
-        name="profile"
-        component={ProfileScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ProfileTab,
-        }}
-      />
+      <MainTabs.Group>
+        <MainTabs.Screen
+          name="post"
+          component={PostsScreen}
+          options={{
+            headerShown: false,
+            tabBarIcon: PostsTab,
+          }}
+        />
+        <MainTabs.Screen
+          name="createPost"
+          component={CreatePostsScreen}
+          options={{
+            headerShown: height > width,
+            title: 'Создать публикацию',
+            headerTitleAlign: 'center',
+            headerTitleStyle: { fontFamily: 'Roboto-Bold', fontSize: 17 },
+            tabBarStyle: { display: 'none' },
+            headerLeft: GoBackBtn,
+            tabBarIcon: CreatePostTab,
+          }}
+        />
+        <MainTabs.Screen
+          name="profile"
+          component={ProfileScreen}
+          options={{
+            headerShown: false,
+            tabBarIcon: ProfileTab,
+          }}
+        />
+      </MainTabs.Group>
+
+      {/* <MainTabs.Group screenOptions={{ presentation: 'modal' }}>
+        <MainTabs.Screen
+          name="FilesModal"
+          component={FilesModal}
+          title="Выбрать аватар"
+        />
+      </MainTabs.Group> */}
     </MainTabs.Navigator>
   );
 };

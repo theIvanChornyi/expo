@@ -24,7 +24,7 @@ import { PostCamera } from '../../../Components/PostCamera/PostCamera';
 import { PostFilePicker } from '../../../Components/PostFilePicker/PostFilePicker';
 import { sendPhotoToStorage } from '../../../services/firebase/sendPhotoToStorage';
 import { writePostToStorage } from '../../../services/firebase/postsAPI';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/auth/authSelectors';
 
 const initialState = {
@@ -33,12 +33,23 @@ const initialState = {
   place: '',
 };
 
-export const CreatePostsScreen = ({ navigation }) => {
+export const CreatePostsScreen = ({ navigation, route }) => {
   const [allowCam, requestAllowCam] = Camera.useCameraPermissions();
   const [allowFile, requestAllowFile] = MediaLibrary.usePermissions();
   const [allowGeo, requestAllowGeo] = Location.useForegroundPermissions();
   const { uid, displayName, photoURL, email } = useSelector(selectUser);
   const [location, setLocation] = useState(null);
+
+  const item = route?.params?.item;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (item) {
+      setPhoto(item);
+      setIsUpload(true);
+    }
+  }, [item]);
+
   useEffect(() => {
     (async () => {
       try {
@@ -79,6 +90,7 @@ export const CreatePostsScreen = ({ navigation }) => {
           mediaType: ['photo'],
           first: 30,
         });
+        navigation.navigate('FilesModal');
         // const video = await MediaLibrary.getAssetInfoAsync(media);
         console.log(media);
       }
