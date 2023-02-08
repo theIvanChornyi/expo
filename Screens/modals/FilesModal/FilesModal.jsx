@@ -11,7 +11,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { style } from './FilesModal.styles';
 import { useEffect, useState } from 'react';
 
-export const FilesModal = ({ navigation, route }) => {
+export const FilesModal = ({ navigation, route, path }) => {
   const [allowFile, requestAllowFile] = MediaLibrary.usePermissions();
   const [files, setFiles] = useState(null);
   const { height, width } = useWindowDimensions();
@@ -53,7 +53,7 @@ export const FilesModal = ({ navigation, route }) => {
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();
-            navigation.navigate('ProfileCamera', { item });
+            navigation.navigate(path, { item });
           }}
         >
           <View

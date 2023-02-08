@@ -67,7 +67,7 @@ export const ProfileScreen = ({ navigation, route }) => {
 
         <ProfileRoot.Screen
           name="FilesModal"
-          component={FilesModal}
+          component={param => <FilesModal path="ProfileCamera" {...param} />}
           title="Выбрать аватар"
         />
       </ProfileRoot.Group>

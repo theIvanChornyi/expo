@@ -19,7 +19,7 @@ import { DeleteBtn } from '../../../Components/DeleteBtn/DeleteBtn';
 import { SubmitBtn } from '../../../Components/SubmitBtn/SubmitBtn';
 import { useKeyboardStatus } from '../../../Hooks/useKeyboardStatus/useKeyboardStatus';
 
-import { style } from './CreatePostsScreen.styles';
+import { style } from './CreatePostsScreenDefault.styles';
 import { PostCamera } from '../../../Components/PostCamera/PostCamera';
 import { PostFilePicker } from '../../../Components/PostFilePicker/PostFilePicker';
 import { sendPhotoToStorage } from '../../../services/firebase/sendPhotoToStorage';
@@ -33,22 +33,22 @@ const initialState = {
   place: '',
 };
 
-export const CreatePostsScreen = ({ navigation, route }) => {
+export const CreatePostsScreenDefault = ({ navigation, route }) => {
   const [allowCam, requestAllowCam] = Camera.useCameraPermissions();
   const [allowFile, requestAllowFile] = MediaLibrary.usePermissions();
   const [allowGeo, requestAllowGeo] = Location.useForegroundPermissions();
   const { uid, displayName, photoURL, email } = useSelector(selectUser);
   const [location, setLocation] = useState(null);
 
-  const item = route?.params?.item;
+  const photo = route?.params?.item;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (item) {
-      setPhoto(item);
+    if (photo) {
+      setPostData(p => ({ ...p, photo }));
       setIsUpload(true);
     }
-  }, [item]);
+  }, [photo]);
 
   useEffect(() => {
     (async () => {
@@ -83,20 +83,7 @@ export const CreatePostsScreen = ({ navigation, route }) => {
   };
 
   const choisePhoto = async () => {
-    try {
-      await requestAllowFile();
-      if (allowFile.granted) {
-        const media = await MediaLibrary.getAssetsAsync({
-          mediaType: ['photo'],
-          first: 30,
-        });
-        navigation.navigate('FilesModal');
-        // const video = await MediaLibrary.getAssetInfoAsync(media);
-        console.log(media);
-      }
-    } catch (error) {
-      console.log(e);
-    }
+    navigation.navigate('FilesModal');
   };
 
   const createPhoto = async () => {
@@ -163,10 +150,7 @@ export const CreatePostsScreen = ({ navigation, route }) => {
             onPress={isUpload ? deletePhoto : createPhoto}
           />
 
-          <PostFilePicker
-            isUpload={isUpload}
-            onPress={isUpload ? deletePhoto : choisePhoto}
-          />
+          <PostFilePicker isUpload={isUpload} onPress={choisePhoto} />
 
           <TextInput
             style={style.descriptionInp}

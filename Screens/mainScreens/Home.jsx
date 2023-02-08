@@ -4,12 +4,11 @@ import { PostsScreen } from './PostsScreen/PostsScreen';
 import { ProfileScreen } from './ProfileScreen/ProfileScreen';
 
 import { CreatePostTab } from '../../Components/CreatePostTab/CreatePostTab';
-import { CreatePostsScreen } from './CreatePostsScreen/CreatePostsScreen';
+import { CreatePostScreen } from '../mainScreens/CreatePostScreen/CreatePostScreen';
 import { GoBackBtn } from '../../Components/GoBackBtn/GoBackBtn';
 import { ProfileTab } from '../../Components/ProfileTab/ProfileTab';
 import { PostsTab } from '../../Components/PostsTab/PostsTab';
 import { useWindowDimensions } from 'react-native';
-import { FilesModal } from '../modals/FilesModal/FilesModal';
 
 const MainTabs = createBottomTabNavigator();
 
@@ -43,7 +42,7 @@ export const Home = () => {
         />
         <MainTabs.Screen
           name="createPost"
-          component={CreatePostsScreen}
+          component={CreatePostScreen}
           options={{
             headerShown: height > width,
             title: 'Создать публикацию',
@@ -63,14 +62,6 @@ export const Home = () => {
           }}
         />
       </MainTabs.Group>
-
-      {/* <MainTabs.Group screenOptions={{ presentation: 'modal' }}>
-        <MainTabs.Screen
-          name="FilesModal"
-          component={FilesModal}
-          title="Выбрать аватар"
-        />
-      </MainTabs.Group> */}
     </MainTabs.Navigator>
   );
 };
