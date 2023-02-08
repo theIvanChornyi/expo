@@ -23,11 +23,17 @@ export const style = StyleSheet.create({
     backgroundColor: '#F6F6F6',
     left: '50%',
     top: -60,
+    borderRadius: 16,
     width: 120,
     height: 120,
-
-    borderRadius: 16,
     transform: [{ translateX: -60 }],
+  },
+
+  avatarImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+    overflow: 'hidden',
   },
 
   addAvatarBtn: {

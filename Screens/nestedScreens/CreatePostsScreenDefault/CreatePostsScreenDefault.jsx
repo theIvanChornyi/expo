@@ -41,7 +41,6 @@ export const CreatePostsScreenDefault = ({ navigation, route }) => {
   const [location, setLocation] = useState(null);
 
   const photo = route?.params?.item;
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (photo) {

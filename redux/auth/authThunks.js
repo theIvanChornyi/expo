@@ -14,7 +14,7 @@ export const signUpUser = createAsyncThunk(
     await createUserWithEmailAndPassword(auth, data?.email, data?.password);
     await updateProfile(auth.currentUser, {
       displayName: data.login,
-      photoURL: '',
+      photoURL: data.photo,
     });
 
     return auth.currentUser;

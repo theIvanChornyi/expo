@@ -7,6 +7,7 @@ import { GoBackBtn } from '../../../Components/GoBackBtn/GoBackBtn';
 import { useTabsHide } from '../../../Hooks/useKeyboardStatus/useTabsHide';
 import { CameraModal } from '../../modals/CameraModal/CameraModal';
 import { FilesModal } from '../../modals/FilesModal/FilesModal';
+import { CloseModalBtn } from '../../../Components/CloseModalBtn/CloseModalBtn';
 
 const ProfileRoot = createStackNavigator();
 
@@ -62,14 +63,25 @@ export const ProfileScreen = ({ navigation, route }) => {
         <ProfileRoot.Screen
           name="ProfileCamera"
           component={CameraModal}
-          title="Изменить аватар"
+          options={{
+            title: 'Изменить аватар',
+            headerTitleAlign: 'center',
+            headerLeft: null,
+            headerRight: CloseModalBtn,
+          }}
         />
 
         <ProfileRoot.Screen
           name="FilesModal"
-          component={param => <FilesModal path="ProfileCamera" {...param} />}
-          title="Выбрать аватар"
-        />
+          options={{
+            title: 'Изменить аватар',
+            headerTitleAlign: 'center',
+            headerLeft: null,
+            headerRight: CloseModalBtn,
+          }}
+        >
+          {param => <FilesModal path="ProfileCamera" {...param} />}
+        </ProfileRoot.Screen>
       </ProfileRoot.Group>
     </ProfileRoot.Navigator>
   );

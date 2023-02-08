@@ -6,11 +6,12 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { DeleteBtn } from '../../../Components/DeleteBtn/DeleteBtn';
 import { SubmitBtn } from '../../../Components/SubmitBtn/SubmitBtn';
 import GoBack from '../../../img/svg/arrowLeft.svg';
 import Shot from '../../../img/svg/camera.svg';
+import { selectUserStatus } from '../../../redux/auth/authSelectors';
 import { changeUserAvatar } from '../../../redux/auth/authThunks';
 import { sendPhotoToStorage } from '../../../services/firebase/sendPhotoToStorage';
 
@@ -19,6 +20,8 @@ import { style } from './CameraModal.styles';
 export const CameraModal = ({ navigation, route }) => {
   const { height, width } = useWindowDimensions();
   const [type, setType] = useState(CameraType.back);
+
+  const isAuth = useSelector(selectUserStatus);
 
   const [isUpload, setIsUpload] = useState(false);
   const [isLoad, setIsLoad] = useState(false);
@@ -60,8 +63,12 @@ export const CameraModal = ({ navigation, route }) => {
 
   const changeAvatar = async () => {
     const data = await sendPhotoToStorage(photo.uri, 'AvatarPhoto');
-    dispatch(changeUserAvatar(data));
-    navigation.goBack();
+    if (isAuth) {
+      dispatch(changeUserAvatar(data));
+      navigation.goBack();
+    } else {
+      navigation.navigate('registrationScreenDefault', { item: { uri: data } });
+    }
   };
 
   return (

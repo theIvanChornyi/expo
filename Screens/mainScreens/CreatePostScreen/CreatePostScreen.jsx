@@ -1,10 +1,11 @@
 import { createStackNavigator } from '@react-navigation/stack';
+import { CloseModalBtn } from '../../../Components/CloseModalBtn/CloseModalBtn';
 import { FilesModal } from '../../modals/FilesModal/FilesModal';
 import { CreatePostsScreenDefault } from '../../nestedScreens/CreatePostsScreenDefault/CreatePostsScreenDefault';
 
 const CreatePostRoot = createStackNavigator();
 
-export const CreatePostScreen = ({ navigation, route }) => {
+export const CreatePostScreen = () => {
   return (
     <CreatePostRoot.Navigator initialRouteName="CreatePostDefaultScreen">
       <CreatePostRoot.Group>
@@ -17,11 +18,15 @@ export const CreatePostScreen = ({ navigation, route }) => {
       <CreatePostRoot.Group screenOptions={{ presentation: 'modal' }}>
         <CreatePostRoot.Screen
           name="FilesModal"
-          component={param => (
-            <FilesModal path="CreatePostDefaultScreen" {...param} />
-          )}
-          title="Выбрать аватар"
-        />
+          options={{
+            title: 'Выбрать аватар',
+            headerTitleAlign: 'center',
+            headerLeft: null,
+            headerRight: CloseModalBtn,
+          }}
+        >
+          {prop => <FilesModal path="CreatePostDefaultScreen" {...prop} />}
+        </CreatePostRoot.Screen>
       </CreatePostRoot.Group>
     </CreatePostRoot.Navigator>
   );
