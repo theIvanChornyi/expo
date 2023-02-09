@@ -6,7 +6,7 @@ import { storage } from './config';
 import { blobPhoto } from '../../helpers/blobPhoto';
 
 export const sendPhotoToStorage = async (uri, path) => {
-  const id = uuid.v4();
+  const id = uuid.v1();
   const photo = await blobPhoto(uri);
   const { metadata } = await uploadBytes(ref(storage, `${path}/${id}`), photo);
   return await getDownloadURL(ref(storage, metadata.fullPath));

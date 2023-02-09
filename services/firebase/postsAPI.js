@@ -24,7 +24,7 @@ export const writePostToStorage = async ({
   location = {},
   place = '',
 }) => {
-  const id = uuid.v4();
+  const id = uuid.v1();
   return await setDoc(doc(db, 'posts', `${title + id}`), {
     owner,
     ownerId: owner.id,
@@ -39,7 +39,7 @@ export const writePostToStorage = async ({
 };
 
 export const AddComentToStorage = async ({ id, coment }) => {
-  const comentId = uuid.v4();
+  const comentId = uuid.v1();
   await updateDoc(doc(db, `posts/${id}/`), {
     coments: arrayUnion({ ...coment, id: comentId }),
   });
