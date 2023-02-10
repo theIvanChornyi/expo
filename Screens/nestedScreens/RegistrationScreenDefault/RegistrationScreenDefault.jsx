@@ -23,6 +23,7 @@ import { NavAuthLink } from '../../../Components/NavAuthLink/NavAuthLink.jsx';
 import { SecretPassBtn } from '../../../Components/SecretPassBtn/SecretPassBtn.jsx';
 import { signUpUser } from '../../../redux/auth/authThunks.js';
 import { validateInput } from '../../../helpers/validation.js';
+import { sendPhotoToStorage } from '../../../services/firebase/sendPhotoToStorage.js';
 
 const initialState = {
   login: '',
@@ -37,7 +38,6 @@ export const RegistrationScreenDefault = ({ navigation, route }) => {
 
   const [authData, setAuthData] = useState(initialState);
   const [isHide, setIsHide] = useState(true);
-  const [isUpload, setIsUpload] = useState(false);
 
   const [activeField, setActiveField] = useState('');
   const [validFields] = useState(() => new Set());
@@ -48,8 +48,7 @@ export const RegistrationScreenDefault = ({ navigation, route }) => {
 
   useEffect(() => {
     if (photo) {
-      setAuthData(p => ({ ...p, photo }));
-      setIsUpload(true);
+      setAuthData(p => ({ ...p, photo: photo.uri }));
     }
   }, [photo]);
 
@@ -60,7 +59,6 @@ export const RegistrationScreenDefault = ({ navigation, route }) => {
   };
   const deletePhoto = () => {
     setAuthData(p => ({ ...p, photo: '' }));
-    setIsUpload(false);
   };
 
   const hideAll = () => {
@@ -74,7 +72,7 @@ export const RegistrationScreenDefault = ({ navigation, route }) => {
   };
 
   const signIn = async () => {
-    await dispatch(signUpUser(authData));
+    dispatch(signUpUser(authData));
     hideAll();
     validFields.clear();
     setAuthData(initialState);
@@ -127,7 +125,11 @@ export const RegistrationScreenDefault = ({ navigation, route }) => {
             >
               <View style={style.avatarContainer}>
                 <Image
-                  source={{ uri: authData?.photo?.uri }}
+                  source={
+                    authData?.photo
+                      ? { uri: authData?.photo }
+                      : require('../../../img/emptyUser.png')
+                  }
                   style={style.avatarImage}
                 />
                 <AddPhotoBtn

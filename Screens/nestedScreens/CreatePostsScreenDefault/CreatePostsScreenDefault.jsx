@@ -40,6 +40,15 @@ export const CreatePostsScreenDefault = ({ navigation, route }) => {
   const { uid, displayName, photoURL, email } = useSelector(selectUser);
   const [location, setLocation] = useState(null);
 
+  const { height, width } = useWindowDimensions();
+  const isShowKeyboard = useKeyboardStatus();
+
+  const [postData, setPostData] = useState(initialState);
+  const [camera, setCamera] = useState(null);
+
+  const [isUpload, setIsUpload] = useState(false);
+  const [isLoad, setIsLoad] = useState(false);
+
   const photo = route?.params?.item;
 
   useEffect(() => {
@@ -67,15 +76,6 @@ export const CreatePostsScreenDefault = ({ navigation, route }) => {
       deletePostData();
     };
   }, []);
-
-  const { height, width } = useWindowDimensions();
-  const isShowKeyboard = useKeyboardStatus();
-
-  const [postData, setPostData] = useState(initialState);
-  const [camera, setCamera] = useState(null);
-
-  const [isUpload, setIsUpload] = useState(false);
-  const [isLoad, setIsLoad] = useState(false);
 
   const hideKeyborard = () => {
     Keyboard.dismiss();
@@ -107,7 +107,10 @@ export const CreatePostsScreenDefault = ({ navigation, route }) => {
   const createPost = async () => {
     if (!postData.photo) return;
     const photo = await sendPhotoToStorage(postData.photo.uri, 'PostsPhoto');
-
+    if (!location.coords) {
+      const newGeo = await Location.getCurrentPositionAsync({});
+      setLocation(newGeo);
+    }
     await writePostToStorage({
       owner: { name: displayName, email, avatar: photoURL, id: uid },
       photo,
@@ -171,7 +174,7 @@ export const CreatePostsScreenDefault = ({ navigation, route }) => {
           </View>
 
           <SubmitBtn
-            disabled={!postData.photo & !location}
+            disabled={!location && !postData.photo}
             title={'Опубликовать'}
             callback={createPost}
             style={style.submitBtn}

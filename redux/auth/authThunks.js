@@ -5,40 +5,44 @@ import {
   signOut,
   updateProfile,
 } from 'firebase/auth';
-import { authFirebase } from '../../services/firebase/config';
+import { authFirebase, storage } from '../../services/firebase/config';
+import { ref, deleteObject } from 'firebase/storage';
+import { sendPhotoToStorage } from '../../services/firebase/sendPhotoToStorage';
 
-export const signUpUser = createAsyncThunk(
-  'auth/createNewUser',
-  async (data, thunkAPI) => {
+export const signUpUser = createAsyncThunk('auth/createNewUser', async data => {
+  try {
     const auth = authFirebase;
 
-    console.log(data);
     await createUserWithEmailAndPassword(auth, data?.email, data?.password);
+
+    let link = '';
+    if (data.photo) {
+      link = await sendPhotoToStorage(data.photo, 'AvatarPhoto');
+    }
     await updateProfile(auth.currentUser, {
       displayName: data.login,
-      photoURL: data.photo.uri,
+      photoURL: link,
     });
 
     return auth.currentUser;
+  } catch (e) {
+    console.log(e);
   }
-);
+});
 
-export const signInUser = createAsyncThunk(
-  'auth/login',
-  async (data, thunkAPI) => {
-    try {
-      const auth = authFirebase;
-      const { user } = await signInWithEmailAndPassword(
-        auth,
-        data?.email,
-        data?.password
-      );
-      return user;
-    } catch (e) {
-      console.log(e);
-    }
+export const signInUser = createAsyncThunk('auth/login', async data => {
+  try {
+    const auth = authFirebase;
+    const { user } = await signInWithEmailAndPassword(
+      auth,
+      data?.email,
+      data?.password
+    );
+    return user;
+  } catch (e) {
+    console.log(e);
   }
-);
+});
 
 export const signOutUser = createAsyncThunk('auth/logOut', async () => {
   try {
@@ -51,30 +55,40 @@ export const signOutUser = createAsyncThunk('auth/logOut', async () => {
 
 export const changeUserAvatar = createAsyncThunk(
   'auth/changeUserAvatar',
-  async (photoURL, thunkAPI) => {
-    const auth = authFirebase;
-    await updateProfile(auth.currentUser, {
-      photoURL,
-    });
+  async photoURL => {
+    try {
+      const auth = authFirebase;
+      await updateProfile(auth.currentUser, {
+        photoURL,
+      });
 
-    const {
-      auth: { currentUser },
-    } = auth.currentUser;
-    return currentUser;
+      const {
+        auth: { currentUser },
+      } = auth.currentUser;
+      return currentUser;
+    } catch (e) {
+      console.log(e);
+    }
   }
 );
 
 export const deleteUserAvatar = createAsyncThunk(
   'auth/deleteUserAvatar',
   async () => {
-    const auth = authFirebase;
-    await updateProfile(auth.currentUser, {
-      photoURL: '',
-    });
+    try {
+      const auth = authFirebase;
+      const desertRef = ref(storage, auth?.currentUser?.photoURL);
+      await deleteObject(desertRef);
+      await updateProfile(auth.currentUser, {
+        photoURL: '',
+      });
 
-    const {
-      auth: { currentUser },
-    } = auth.currentUser;
-    return currentUser;
+      const {
+        auth: { currentUser },
+      } = auth.currentUser;
+      return currentUser;
+    } catch (e) {
+      console.log(e);
+    }
   }
 );

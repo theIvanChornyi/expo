@@ -62,12 +62,14 @@ export const CameraModal = ({ navigation, route }) => {
   };
 
   const changeAvatar = async () => {
-    const data = await sendPhotoToStorage(photo.uri, 'AvatarPhoto');
     if (isAuth) {
+      const data = await sendPhotoToStorage(photo.uri, 'AvatarPhoto');
       dispatch(changeUserAvatar(data));
       navigation.goBack();
     } else {
-      navigation.navigate('registrationScreenDefault', { item: { uri: data } });
+      navigation.navigate('registrationScreenDefault', {
+        item: { uri: photo.uri },
+      });
     }
   };
 
