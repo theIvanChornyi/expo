@@ -128,7 +128,7 @@ export const RegistrationScreenDefault = ({ navigation, route }) => {
                   source={
                     authData?.photo
                       ? { uri: authData?.photo }
-                      : require('../../../img/emptyUser.png')
+                      : require('../../../img/emptyUser.jpg')
                   }
                   style={style.avatarImage}
                 />
