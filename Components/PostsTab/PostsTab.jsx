@@ -5,7 +5,7 @@ import { style } from './PostsTab.styles';
 export const PostsTab = () => {
   return (
     <View style={style.PostsTab}>
-      <Posts fill="#fff" />
+      <Posts />
     </View>
   );
 };
